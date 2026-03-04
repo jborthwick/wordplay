@@ -21,3 +21,9 @@ Now:
 [X] Allow skipping, with arrow keys, of the last question in a pack to get to the end note.
 [X] For spellcheck mechanic: Add a shimmer effect to the right answers, its a bit hard right now and requires much rereading.
 [X] for highlight mechanic: try a different layout for the lines. put them in a paragraph form and allow more natural click-and-drag highlighting. Single clicking anywhere in the paragraph resets the highlight, until you lock in.
+[x] Update each pack to have: 2 word fills, 1 spellchecks, 1 sentence fills, and 2 highlights
+[x] Update the font-size on the highlight puzzle to be bigger (similar to the word fill puzzle size)
+[x] Add clickable bookmark icons to the reading list stories at the end. Outline bookmark for untoggled state (Default), filled in bookmark icon for toggled state.
+[x] Make the attribution line (e.g. Priya Sharma · On Walking Without a Destination) appear clickable (underline on hover).
+[ ] Move the attribution
+[x] add a mechanic title header (e.g. Highlights, Fill, Rearrange, Spellcheck) to each puzzle type above the attribution line.

@@ -53,6 +53,92 @@ function getDailyWelcome() {
   return welcomeMessages[dayOfYear % welcomeMessages.length];
 }
 
+interface CompletedViewProps {
+  puzzleCount: number;
+  mistakes: number;
+  mistakeWord: string;
+  flawless: boolean;
+  outOfMistakes: boolean;
+  editor: string;
+  editorNote: string;
+  sources: import("../types").PuzzleSource[];
+  onRestart: () => void;
+}
+
+function BookmarkIcon({ filled }: { filled: boolean }) {
+  return filled ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+
+function CompletedView({ puzzleCount, mistakes, mistakeWord, flawless, outOfMistakes, editor, editorNote, sources, onRestart }: CompletedViewProps) {
+  const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
+
+  function toggleBookmark(title: string) {
+    setBookmarked((prev) => {
+      const next = new Set(prev);
+      if (next.has(title)) next.delete(title);
+      else next.add(title);
+      return next;
+    });
+  }
+
+  return (
+    <div className="pack-complete puzzle-enter">
+      <h2>Pack complete</h2>
+      {flawless ? (
+        <p>Flawless. {puzzleCount} puzzles, zero missteps.</p>
+      ) : outOfMistakes ? (
+        <p>{puzzleCount} puzzles done — it got tough, but you made it.</p>
+      ) : (
+        <p>{puzzleCount} puzzles, {mistakes} {mistakeWord}. Nice reading.</p>
+      )}
+      <div className="pack-complete-dots">
+        {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
+          <span
+            key={i}
+            className={`mistake-dot ${i < MAX_MISTAKES - mistakes ? "mistake-dot-full" : "mistake-dot-empty"}`}
+          />
+        ))}
+      </div>
+      <div className="editor-note">
+        <p className="editor-note-label">A note from the editor</p>
+        <p className="editor-note-body">{editorNote}</p>
+        <p className="editor-note-sign">— {editor}</p>
+      </div>
+      <div className="reading-list">
+        <p className="reading-list-label">Today's reading list</p>
+        <ul className="reading-list-items">
+          {sources.map((s) => (
+            <li key={s.title} className="reading-list-item">
+              <a href={s.story_url} className="reading-list-link">
+                <span className="reading-list-title">{s.title}</span>
+                <span className="reading-list-author">{s.author}</span>
+              </a>
+              <button
+                className={`bookmark-button ${bookmarked.has(s.title) ? "bookmark-button-active" : ""}`}
+                onClick={() => toggleBookmark(s.title)}
+                title={bookmarked.has(s.title) ? "Remove bookmark" : "Bookmark"}
+              >
+                <BookmarkIcon filled={bookmarked.has(s.title)} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <button className="play-again-button" onClick={onRestart}>
+        Back to start
+      </button>
+    </div>
+  );
+}
+
 export function PackView({ pack, onRestart, onBack }: Props) {
   const { puzzles, title, editor } = pack;
   const [showWelcome, setShowWelcome] = useState(true);
@@ -163,47 +249,17 @@ export function PackView({ pack, onRestart, onBack }: Props) {
         return true;
       });
 
-    return (
-      <div className="pack-complete puzzle-enter">
-        <h2>Pack complete</h2>
-        {flawless ? (
-          <p>Flawless. {puzzles.length} puzzles, zero missteps.</p>
-        ) : outOfMistakes ? (
-          <p>{puzzles.length} puzzles done — it got tough, but you made it.</p>
-        ) : (
-          <p>{puzzles.length} puzzles, {mistakes} {mistakeWord}. Nice reading.</p>
-        )}
-        <div className="pack-complete-dots">
-          {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
-            <span
-              key={i}
-              className={`mistake-dot ${i < MAX_MISTAKES - mistakes ? "mistake-dot-full" : "mistake-dot-empty"}`}
-            />
-          ))}
-        </div>
-        <div className="editor-note">
-          <p className="editor-note-label">A note from the editor</p>
-          <p className="editor-note-body">{editorNote}</p>
-          <p className="editor-note-sign">— {editor}</p>
-        </div>
-        <div className="reading-list">
-          <p className="reading-list-label">Today's reading list</p>
-          <ul className="reading-list-items">
-            {sources.map((s) => (
-              <li key={s.title} className="reading-list-item">
-                <a href={s.story_url} className="reading-list-link">
-                  <span className="reading-list-title">{s.title}</span>
-                  <span className="reading-list-author">{s.author}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button className="play-again-button" onClick={onRestart}>
-          Back to start
-        </button>
-      </div>
-    );
+    return <CompletedView
+      puzzleCount={puzzles.length}
+      mistakes={mistakes}
+      mistakeWord={mistakeWord}
+      flawless={flawless}
+      outOfMistakes={outOfMistakes}
+      editor={editor}
+      editorNote={editorNote}
+      sources={sources}
+      onRestart={onRestart}
+    />;
   }
 
   const puzzle = puzzles[currentIndex];

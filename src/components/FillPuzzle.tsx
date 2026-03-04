@@ -216,7 +216,7 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
       style={{ touchAction: isDragging ? "none" : "auto" }}
     >
       <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} />
+        <Attribution source={puzzle.source} showReadLink={solved} mechanic="Fill" />
       </div>
 
       <div className="passage">

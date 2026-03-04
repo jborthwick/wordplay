@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { HighlightPuzzle as HighlightPuzzleType } from "../types";
 import { Attribution } from "./Attribution";
 
@@ -20,63 +20,60 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
   const solved = revealed;
   const maxDensity = Math.max(...highlight_density);
 
-  // Drag tracking refs
-  const isDragging = useRef(false);
-  const dragStart = useRef<number | null>(null);
   const sentenceRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const paragraphRef = useRef<HTMLDivElement>(null);
 
-  // Find which sentence a pointer coordinate is over
-  const getSentenceAtPoint = useCallback((x: number, y: number): number | null => {
-    for (let i = 0; i < sentences.length; i++) {
-      const el = sentenceRefs.current[i];
-      if (!el) continue;
-      const rect = el.getBoundingClientRect();
-      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-        return i;
-      }
-    }
-    return null;
-  }, [sentences.length]);
-
-  // Pointer handlers for drag highlighting
-  const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    if (revealed) return;
-    e.preventDefault();
-
-    const idx = getSentenceAtPoint(e.clientX, e.clientY);
-    if (idx === null) return;
-
-    isDragging.current = true;
-    dragStart.current = idx;
-    setSelection([idx, idx]);
-  }, [revealed, getSentenceAtPoint]);
-
+  // Use native browser text selection — on mouseup, capture which sentences
+  // the user highlighted and convert to our styled selection
   useEffect(() => {
-    function onMove(e: PointerEvent) {
-      if (!isDragging.current || dragStart.current === null) return;
-      e.preventDefault();
-      const idx = getSentenceAtPoint(e.clientX, e.clientY);
-      if (idx !== null) {
-        const start = Math.min(dragStart.current, idx);
-        const end = Math.max(dragStart.current, idx);
-        setSelection([start, end]);
-      }
+    if (revealed) return;
+
+    function handlePointerUp() {
+      requestAnimationFrame(() => {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return;
+
+        // Single click (no drag) — clear our selection
+        if (sel.isCollapsed) {
+          // Only clear if the click was inside our paragraph
+          const para = paragraphRef.current;
+          if (para && sel.anchorNode && para.contains(sel.anchorNode)) {
+            setSelection(null);
+          }
+          return;
+        }
+
+        // Make sure the selection is within our paragraph
+        const para = paragraphRef.current;
+        if (!para) return;
+        const range = sel.getRangeAt(0);
+        if (!para.contains(range.commonAncestorContainer)) return;
+
+        // Find which sentence spans overlap with the native selection
+        let startIdx: number | null = null;
+        let endIdx: number | null = null;
+
+        for (let i = 0; i < sentences.length; i++) {
+          const el = sentenceRefs.current[i];
+          if (!el) continue;
+          if (sel.containsNode(el, true)) {
+            if (startIdx === null) startIdx = i;
+            endIdx = i;
+          }
+        }
+
+        // Clear native selection, apply our styled highlight
+        sel.removeAllRanges();
+
+        if (startIdx !== null && endIdx !== null) {
+          setSelection([startIdx, endIdx]);
+        }
+      });
     }
 
-    function onUp(e: PointerEvent) {
-      if (!isDragging.current) return;
-      e.preventDefault();
-      isDragging.current = false;
-      dragStart.current = null;
-    }
-
-    document.addEventListener("pointermove", onMove, { passive: false });
-    document.addEventListener("pointerup", onUp);
-    return () => {
-      document.removeEventListener("pointermove", onMove);
-      document.removeEventListener("pointerup", onUp);
-    };
-  }, [getSentenceAtPoint]);
+    document.addEventListener("pointerup", handlePointerUp);
+    return () => document.removeEventListener("pointerup", handlePointerUp);
+  }, [revealed, sentences.length]);
 
   function clearSelection() {
     if (revealed) return;
@@ -126,7 +123,7 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
   return (
     <div className="highlight-puzzle">
       <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} />
+        <Attribution source={puzzle.source} showReadLink={solved} mechanic="Highlight" />
       </div>
 
       <div className="highlight-passage">
@@ -135,9 +132,8 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
         </p>
 
         <div
+          ref={paragraphRef}
           className={`highlight-paragraph ${revealed ? "highlight-paragraph-revealed" : ""}`}
-          onPointerDown={!revealed ? handlePointerDown : undefined}
-          style={!revealed ? { touchAction: "none" } : undefined}
         >
           {sentences.map((sentence, i) => {
             const isCorrect = i === correct_index;

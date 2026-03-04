@@ -9,92 +9,85 @@ interface Props {
   outOfMistakes?: boolean;
 }
 
-interface DragInfo {
-  line: string;
-  /** "bank" or slot index the line is coming from */
-  origin: "bank" | number;
-  /** Index in the shuffled bank array */
-  bankIndex?: number;
-}
-
 export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Props) {
   const { lines, movable_indices } = puzzle.content;
   const totalSlots = movable_indices.length;
 
-  // Which lines go in slots — correct answers in slot order
+  // Correct answers in slot order
   const slotAnswers = useMemo(
     () => movable_indices.map((i) => lines[i]),
     [lines, movable_indices]
   );
 
-  // Shuffled bank of movable lines
-  const shuffledBank = useMemo(() => {
-    const movableLines = movable_indices.map((i) => lines[i]);
-    return [...movableLines].sort((a, b) => {
-      const hashA = a.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
-      const hashB = b.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
-      return hashA - hashB;
-    });
-  }, [lines, movable_indices]);
+  // Shuffle the movable lines for initial placement
+  const shuffledInitial = useMemo(() => {
+    const arr = [...slotAnswers];
+    // Seeded Fisher-Yates
+    let seed = arr.join("").split("").reduce((a, c, i) => a + c.charCodeAt(0) * (i + 1), 0);
+    function rand() {
+      seed = (seed * 16807 + 0) % 2147483647;
+      return (seed - 1) / 2147483646;
+    }
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    // Ensure at least one is out of place
+    if (arr.every((line, i) => line === slotAnswers[i])) {
+      [arr[0], arr[1]] = [arr[1], arr[0]];
+    }
+    return arr;
+  }, [slotAnswers]);
 
-  const [filled, setFilled] = useState<(string | null)[]>(
-    () => new Array(totalSlots).fill(null)
-  );
-  const [isDragging, setIsDragging] = useState(false);
+  const [slots, setSlots] = useState<string[]>(shuffledInitial);
   const [wrongSlots, setWrongSlots] = useState<Set<number>>(new Set());
+  const [correctSlots, setCorrectSlots] = useState<Set<number>>(new Set());
   const [justPlaced, setJustPlaced] = useState<number | null>(null);
+  const [justSwapped, setJustSwapped] = useState<number | null>(null);
+  const [draggingSlot, setDraggingSlot] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
+  const [locked, setLocked] = useState(false);
 
   const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const ghostRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<DragInfo | null>(null);
-  const filledRef = useRef(filled);
-  filledRef.current = filled;
+  const dragRef = useRef<{ line: string; fromSlot: number } | null>(null);
+  const slotsRef = useRef(slots);
+  slotsRef.current = slots;
   const lastHoverSlot = useRef<number | null>(null);
 
-  const solved = filled.every((line, i) => line === slotAnswers[i]) || revealed;
-  const allFilled = filled.every((line) => line !== null);
+  const solved = locked && slots.every((line, i) => line === slotAnswers[i]);
 
   function handleReveal() {
-    setFilled([...slotAnswers]);
+    setSlots([...slotAnswers]);
     setRevealed(true);
+    setLocked(true);
   }
 
-  // Check which bank cards are used
-  function isBankUsed(bankIndex: number): boolean {
-    const line = shuffledBank[bankIndex];
-    let bankOccurrence = 0;
-    for (let i = 0; i <= bankIndex; i++) {
-      if (shuffledBank[i] === line) bankOccurrence++;
-    }
-    let placedCount = 0;
-    for (const f of filled) {
-      if (f === line) placedCount++;
-    }
-    const drag = dragRef.current;
-    if (isDragging && drag && drag.origin === "bank" && shuffledBank[drag.bankIndex!] === line) {
-      placedCount++;
-    }
-    return bankOccurrence <= placedCount;
-  }
-
-  // Check answers when all slots filled
-  useEffect(() => {
-    if (!allFilled || solved) return;
+  function handleLockIn() {
+    setLocked(true);
     const wrong = new Set<number>();
-    filled.forEach((line, i) => {
-      if (line !== slotAnswers[i]) wrong.add(i);
+    const correct = new Set<number>();
+    slots.forEach((line, i) => {
+      if (line === slotAnswers[i]) {
+        correct.add(i);
+      } else {
+        wrong.add(i);
+      }
     });
+    setCorrectSlots(correct);
     if (wrong.size > 0) {
       setWrongSlots(wrong);
       onMistake?.();
-      const t = setTimeout(() => setWrongSlots(new Set()), 1200);
-      return () => clearTimeout(t);
+      // Unlock after shake so player can try again
+      setTimeout(() => {
+        setWrongSlots(new Set());
+        setCorrectSlots(new Set());
+        setLocked(false);
+      }, 1200);
     }
-  }, [allFilled, filled, slotAnswers, solved, onMistake]);
+  }
 
-  // Hit-test which slot the pointer is over
   function getSlotAtPoint(x: number, y: number): number | null {
     for (let i = 0; i < totalSlots; i++) {
       const el = slotRefs.current[i];
@@ -143,43 +136,27 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
       e.preventDefault();
 
       const targetSlot = getSlotAtPoint(e.clientX, e.clientY);
-      const currentFilled = filledRef.current;
+      const current = slotsRef.current;
 
-      if (targetSlot !== null) {
-        const next = [...currentFilled];
-        if (drag.origin === "bank") {
-          next[targetSlot] = drag.line;
-        } else {
-          const fromSlot = drag.origin as number;
-          if (targetSlot !== fromSlot) {
-            const temp = next[targetSlot];
-            next[targetSlot] = next[fromSlot];
-            next[fromSlot] = temp;
-          }
-        }
-        setFilled(next);
+      if (targetSlot !== null && targetSlot !== drag.fromSlot) {
+        // Swap the two slots
+        const next = [...current];
+        [next[drag.fromSlot], next[targetSlot]] = [next[targetSlot], next[drag.fromSlot]];
+        setSlots(next);
         setJustPlaced(targetSlot);
-        setTimeout(() => setJustPlaced(null), 300);
-      } else if (drag.origin !== "bank") {
-        // Dragged from slot to nowhere — remove
-        const next = [...currentFilled];
-        next[drag.origin as number] = null;
-        setFilled(next);
+        setJustSwapped(drag.fromSlot);
+        setTimeout(() => {
+          setJustPlaced(null);
+          setJustSwapped(null);
+        }, 300);
       }
 
       // Clean up
       updateHoverHighlight(null);
       const ghost = ghostRef.current;
       if (ghost) ghost.style.display = "none";
-
-      if (drag.origin === "bank" && drag.bankIndex !== undefined) {
-        const cards = containerRef.current?.querySelectorAll(".rearrange-card");
-        const el = cards?.[drag.bankIndex] as HTMLElement;
-        if (el) el.classList.remove("rearrange-card-dragging");
-      }
-
       dragRef.current = null;
-      setIsDragging(false);
+      setDraggingSlot(null);
     }
 
     document.addEventListener("pointermove", onMove, { passive: false });
@@ -190,18 +167,13 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
     };
   }, [totalSlots]);
 
-  function startDrag(
-    line: string,
-    origin: "bank" | number,
-    bankIndex: number | undefined,
-    e: React.PointerEvent
-  ) {
-    if (solved) return;
+  function startDrag(slotIndex: number, e: React.PointerEvent) {
+    if (solved || locked || revealed) return;
     e.preventDefault();
 
-    dragRef.current = { line, origin, bankIndex };
-    setIsDragging(true);
-    setWrongSlots(new Set());
+    const line = slots[slotIndex];
+    dragRef.current = { line, fromSlot: slotIndex };
+    setDraggingSlot(slotIndex);
 
     const ghost = ghostRef.current;
     if (ghost) {
@@ -211,31 +183,28 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
       ghost.style.top = `${e.clientY - 24}px`;
       ghost.style.transform = "scale(1.03)";
     }
-
-    if (origin === "bank" && bankIndex !== undefined) {
-      const cards = containerRef.current?.querySelectorAll(".rearrange-card");
-      const el = cards?.[bankIndex] as HTMLElement;
-      if (el) el.classList.add("rearrange-card-dragging");
-    }
   }
 
-  // Build the passage: fixed lines + slots for movable lines
+  // Build the passage: fixed lines are static, movable lines are draggable slots
   const movableSet = new Set(movable_indices);
   let slotCounter = 0;
 
   return (
     <div className="rearrange-puzzle" ref={containerRef}>
       <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} />
+        <Attribution source={puzzle.source} showReadLink={solved || revealed} mechanic="Rearrange" />
       </div>
 
       <div className="rearrange-passage">
-        <p className="instruction">Drag each line into its place</p>
+        <p className="instruction">
+          {solved || revealed
+            ? "The argument flows"
+            : "Drag to swap the highlighted lines into the right order"}
+        </p>
         {lines.map((line, lineIndex) => {
           if (movableSet.has(lineIndex)) {
             const slotIdx = slotCounter++;
-            const filledLine = filled[slotIdx];
-            const isBeingDragged = isDragging && dragRef.current?.origin === slotIdx;
+            const isBeingDragged = draggingSlot === slotIdx;
 
             return (
               <div
@@ -243,23 +212,23 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
                 ref={(el) => { slotRefs.current[slotIdx] = el; }}
                 className={[
                   "rearrange-slot",
-                  filledLine ? "rearrange-slot-filled" : "rearrange-slot-empty",
+                  isBeingDragged ? "rearrange-slot-empty" : "rearrange-slot-filled",
                   wrongSlots.has(slotIdx) ? "rearrange-slot-wrong" : "",
-                  justPlaced === slotIdx ? "rearrange-slot-snap" : "",
-                  solved ? "rearrange-slot-solved" : "",
+                  correctSlots.has(slotIdx) ? "rearrange-slot-correct" : "",
+                  justPlaced === slotIdx || justSwapped === slotIdx ? "rearrange-slot-snap" : "",
+                  revealed ? "rearrange-slot-solved" : "",
+                  solved ? "rearrange-slot-correct" : "",
                 ].join(" ")}
                 onPointerDown={(e) => {
-                  if (filledLine && !isBeingDragged) {
-                    startDrag(filledLine, slotIdx, undefined, e);
-                  }
+                  if (!isBeingDragged) startDrag(slotIdx, e);
                 }}
               >
-                {filledLine && !isBeingDragged ? filledLine : "\u00A0"}
+                {isBeingDragged ? "\u00A0" : slots[slotIdx]}
               </div>
             );
           } else {
             return (
-              <div key={lineIndex} className={`rearrange-fixed ${solved ? "rearrange-fixed-solved" : ""}`}>
+              <div key={lineIndex} className={`rearrange-fixed ${solved || revealed ? "rearrange-fixed-solved" : ""}`}>
                 {line}
               </div>
             );
@@ -267,42 +236,30 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
         })}
       </div>
 
-      {solved ? (
+      {solved || revealed ? (
         <div className="feedback correct">
           <p className="feedback-message">
-            {revealed ? "Here's how the passage reads. Worth knowing." : "The argument flows. You read like an editor."}
+            {revealed
+              ? "Here's how the passage reads. Worth knowing."
+              : "The argument flows. You read like an editor."}
           </p>
           <button className="next-button" onClick={onComplete}>
             Continue
           </button>
         </div>
       ) : (
-        <>
-          <div className="rearrange-bank">
-            {shuffledBank.map((line, i) => {
-              const used = isBankUsed(i);
-              return (
-                <div
-                  key={`${line}-${i}`}
-                  className={`rearrange-card ${used ? "rearrange-card-used" : ""}`}
-                  onPointerDown={(e) => {
-                    if (!used) startDrag(line, "bank", i, e);
-                  }}
-                >
-                  {line}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="hint-area">
-            {outOfMistakes && (
-              <button className="reveal-button" onClick={handleReveal}>
-                Reveal answer
-              </button>
-            )}
-          </div>
-        </>
+        <div className="highlight-actions">
+          {!locked && (
+            <button className="next-button highlight-commit" onClick={handleLockIn}>
+              Lock in
+            </button>
+          )}
+          {outOfMistakes && (
+            <button className="reveal-button" onClick={handleReveal}>
+              Reveal answer
+            </button>
+          )}
+        </div>
       )}
 
       {/* Ghost element for drag */}

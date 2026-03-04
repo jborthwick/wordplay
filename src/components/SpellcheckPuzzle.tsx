@@ -112,7 +112,7 @@ export function SpellcheckPuzzle({ puzzle, onComplete, onMistake, outOfMistakes 
   return (
     <div className="spellcheck-puzzle">
       <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} />
+        <Attribution source={puzzle.source} showReadLink={solved} mechanic="Spellcheck" />
       </div>
 
       <div className="passage">
@@ -152,6 +152,7 @@ export function SpellcheckPuzzle({ puzzle, onComplete, onMistake, outOfMistakes 
                 key={i}
                 className={[
                   "spellcheck-word",
+                  token.isError && !isFound ? "spellcheck-word-hint" : "",
                   isWrongTap ? "spellcheck-word-wrong" : "",
                   solved ? "spellcheck-word-solved" : "",
                 ].join(" ")}

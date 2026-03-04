@@ -299,7 +299,6 @@ export const dailyPack: Pack = {
       spellcheckPuzzles[0],
       dailyHighlights[0],
       fillPuzzles[1],
-      rearrangePuzzles[1],
       dailyHighlights[1],
     ],
     dateSeed
@@ -394,27 +393,6 @@ const smallTruthsPuzzles: Puzzle[] = [
     hint: "One is a verb used as a noun. The other is an irregular past tense.",
   },
   {
-    id: "st-spellcheck-02",
-    mechanic: "spellcheck",
-    source: {
-      title: "The Art of Noticing",
-      author: "Thomas Reid",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "The compliment of attention is restraint. When you truly notice something, the impulse to photograph it, to share it, to turn it into content — that impulse quiets down. Your left with the thing itself.",
-      errors: [
-        { wrong: "compliment", correct: "complement" },
-        { wrong: "Your", correct: "You're" },
-      ],
-      corrected_passage:
-        "The complement of attention is restraint. When you truly notice something, the impulse to photograph it, to share it, to turn it into content — that impulse quiets down. You're left with the thing itself.",
-    },
-    difficulty: "hard",
-    hint: "One word flatters; the other completes. And check who's being left.",
-  },
-  {
     id: "st-highlight-01",
     mechanic: "highlight",
     source: {
@@ -436,6 +414,29 @@ const smallTruthsPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "Look for the sentence that redefines silence — where it stops being a lack and becomes something else.",
+  },
+  {
+    id: "st-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "The Art of Noticing",
+      author: "Thomas Reid",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "I started keeping a notebook of things I noticed.",
+        "Not important things — ordinary ones.",
+        "The way light hit the kitchen counter at four in the afternoon.",
+        "The particular silence after a bus pulls away.",
+        "Within a month, the world looked different.",
+        "Nothing had changed except the quality of my attention.",
+      ],
+      correct_index: 5,
+      highlight_density: [0.06, 0.05, 0.14, 0.12, 0.20, 0.43],
+    },
+    difficulty: "medium",
+    hint: "Readers gravitate toward the sentence that names the transformation — not the examples, but the explanation.",
   },
 ];
 
@@ -513,28 +514,6 @@ const againstTheClockPuzzles: Puzzle[] = [
     hint: "The setup is about youth, the middle is the turning point, the end is the lesson.",
   },
   {
-    id: "atc-rearrange-02",
-    mechanic: "rearrange",
-    source: {
-      title: "The Tyranny of the Calendar",
-      author: "Angela Torres",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "The first thing I did was delete all my recurring meetings.",
-        "Not cancel them — just remove their permanence.",
-        "If a meeting mattered, someone would reschedule it.",
-        "Most didn't come back.",
-        "What filled the space wasn't productivity.",
-        "It was something I hadn't felt in years: boredom. And from boredom, ideas.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "hard",
-    hint: "First the action, then the test, then what emerged.",
-  },
-  {
     id: "atc-spellcheck-01",
     mechanic: "spellcheck",
     source: {
@@ -554,27 +533,6 @@ const againstTheClockPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "One error is about possession vs. contraction. The other is about edges, not tenants.",
-  },
-  {
-    id: "atc-spellcheck-02",
-    mechanic: "spellcheck",
-    source: {
-      title: "The Tyranny of the Calendar",
-      author: "Angela Torres",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "We treat busyness like a badge of honor, but it's really a sheild. If every hour is accounted for, you never have to face the discomfort of choosing what actually matters. The calendar becomes a conscience — or at least, a convincing substitue for one.",
-      errors: [
-        { wrong: "sheild", correct: "shield" },
-        { wrong: "substitue", correct: "substitute" },
-      ],
-      corrected_passage:
-        "We treat busyness like a badge of honor, but it's really a shield. If every hour is accounted for, you never have to face the discomfort of choosing what actually matters. The calendar becomes a conscience — or at least, a convincing substitute for one.",
-    },
-    difficulty: "easy",
-    hint: "Both are common misspellings. Sound them out carefully.",
   },
   {
     id: "atc-highlight-01",
@@ -598,6 +556,29 @@ const againstTheClockPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "The most highlighted line is often the one where someone speaks — where the mask comes off.",
+  },
+  {
+    id: "atc-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "The Tyranny of the Calendar",
+      author: "Angela Torres",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "We treat busyness like a badge of honor.",
+        "But it's really a shield.",
+        "If every hour is accounted for, you never have to face the discomfort of choosing what actually matters.",
+        "The calendar becomes a conscience — or at least, a convincing substitute for one.",
+        "I deleted my recurring meetings on a Tuesday.",
+        "By Thursday I was terrified. By Sunday I was painting.",
+      ],
+      correct_index: 2,
+      highlight_density: [0.08, 0.12, 0.38, 0.22, 0.07, 0.13],
+    },
+    difficulty: "hard",
+    hint: "Readers highlight the sentence that names the real function of busyness — what it protects you from.",
   },
 ];
 
@@ -718,6 +699,29 @@ const longViewPuzzles: Puzzle[] = [
     difficulty: "medium",
     hint: "The most highlighted sentence often captures a felt experience — something the reader's body recognizes before their mind does.",
   },
+  {
+    id: "lv-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "Lessons from a Ten-Year Experiment",
+      author: "Harold West",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "I started the project at thirty-two, certain I knew what I was doing.",
+        "By thirty-five I'd thrown out the original plan entirely.",
+        "By forty, I'd stopped planning at all.",
+        "The thing about long-term projects is that they outlast you.",
+        "You start with a hypothesis and end with a confession.",
+        "The person who finishes is never the person who began.",
+      ],
+      correct_index: 5,
+      highlight_density: [0.04, 0.06, 0.08, 0.15, 0.22, 0.45],
+    },
+    difficulty: "medium",
+    hint: "The most highlighted sentence is the one that turns a story about a project into a story about identity.",
+  },
 ];
 
 const longView: Pack = {
@@ -794,28 +798,6 @@ const quietMachinesPuzzles: Puzzle[] = [
     hint: "Deletion leads to return. The reason isn't connection — it's identity.",
   },
   {
-    id: "qm-rearrange-02",
-    mechanic: "rearrange",
-    source: {
-      title: "Why I Stopped Using My Phone Before Bed",
-      author: "James Cooper",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "The experiment was simple: no phone after 9 p.m.",
-        "The first night, I didn't know what to do with my hands.",
-        "The second night, I picked up a book I'd bought three years ago.",
-        "By the end of the week, I was sleeping an hour earlier.",
-        "I hadn't gained willpower. I'd just removed the thing competing with rest.",
-        "The phone wasn't keeping me awake. It was keeping me from wanting to sleep.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "medium",
-    hint: "A simple rule, then awkward adjustment, then unexpected discovery, then reframing.",
-  },
-  {
     id: "qm-spellcheck-01",
     mechanic: "spellcheck",
     source: {
@@ -836,27 +818,6 @@ const quietMachinesPuzzles: Puzzle[] = [
     },
     difficulty: "hard",
     hint: "One is a homophone mix-up. One breaks the i-before-e rule. One confuses sequence with comparison.",
-  },
-  {
-    id: "qm-spellcheck-02",
-    mechanic: "spellcheck",
-    source: {
-      title: "Why I Stopped Using My Phone Before Bed",
-      author: "James Cooper",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "We complain about our devices like there addictions we can't control, but the truth is simpler than that. We use them because the alternative — sitting with our own thoughts — has become genuinely unfamiliar. Boredom isn't the absense of stimulation. It's the presence of yourself.",
-      errors: [
-        { wrong: "there", correct: "they're" },
-        { wrong: "absense", correct: "absence" },
-      ],
-      corrected_passage:
-        "We complain about our devices like they're addictions we can't control, but the truth is simpler than that. We use them because the alternative — sitting with our own thoughts — has become genuinely unfamiliar. Boredom isn't the absence of stimulation. It's the presence of yourself.",
-    },
-    difficulty: "medium",
-    hint: "One is a common contraction mistake. The other is a spelling error — think about what letters are actually there.",
   },
   {
     id: "qm-highlight-01",
@@ -880,6 +841,29 @@ const quietMachinesPuzzles: Puzzle[] = [
     },
     difficulty: "hard",
     hint: "Short sentences that reframe everything tend to get the most highlights. Look for the pivot.",
+  },
+  {
+    id: "qm-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "Why I Stopped Using My Phone Before Bed",
+      author: "James Cooper",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "The last thing I saw each night was a glow.",
+        "Not a book, not a person — a screen.",
+        "I'd scroll through other people's days until my own felt small enough to end.",
+        "The phone wasn't keeping me awake.",
+        "It was keeping me from wanting to sleep.",
+        "That's a different kind of problem.",
+      ],
+      correct_index: 2,
+      highlight_density: [0.07, 0.09, 0.42, 0.10, 0.22, 0.10],
+    },
+    difficulty: "medium",
+    hint: "Readers stop at the line that makes the familiar feel newly strange. Look for the image that reframes everything.",
   },
 ];
 
@@ -957,28 +941,6 @@ const openQuestionsPuzzles: Puzzle[] = [
     hint: "A question, then an attempted answer, then realizing the real question, then acceptance.",
   },
   {
-    id: "oq-rearrange-02",
-    mechanic: "rearrange",
-    source: {
-      title: "Learning to Sit with Uncertainty",
-      author: "Michael Adeyemi",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "I used to think ambiguity was a problem to solve.",
-        "Every gray area was just a decision I hadn't made yet.",
-        "Then I spent a year working on a project with no clear outcome.",
-        "No roadmap, no metrics, no way to know if it was working.",
-        "Somewhere around month six, I stopped needing to know.",
-        "The work itself became the answer.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "hard",
-    hint: "The setup is about certainty. The middle is the challenge. The end is the shift.",
-  },
-  {
     id: "oq-spellcheck-01",
     mechanic: "spellcheck",
     source: {
@@ -1023,6 +985,29 @@ const openQuestionsPuzzles: Puzzle[] = [
     difficulty: "medium",
     hint: "The most highlighted line is often the one with a metaphor that ties everything together.",
   },
+  {
+    id: "oq-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "Learning to Sit with Uncertainty",
+      author: "Michael Adeyemi",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "I used to think ambiguity was a problem to solve.",
+        "Every gray area was just a decision I hadn't made yet.",
+        "Then I spent a year working on a project with no clear outcome.",
+        "No roadmap, no metrics, no way to know if it was working.",
+        "Somewhere around month six, I stopped needing to know.",
+        "The work itself became the answer.",
+      ],
+      correct_index: 4,
+      highlight_density: [0.07, 0.08, 0.11, 0.13, 0.38, 0.23],
+    },
+    difficulty: "hard",
+    hint: "Readers often highlight the sentence where the author's relationship with the problem actually changes — not the conclusion, but the turning point.",
+  },
 ];
 
 const openQuestions: Pack = {
@@ -1032,7 +1017,7 @@ const openQuestions: Pack = {
   puzzles: openQuestionsPuzzles,
   welcome: {
     body: "Some questions don't have answers — and that's not a failure, it's a feature. Today's writers sit with uncertainty, ask the questions their children ask, and find clarity in not-knowing.",
-    body2: "Five puzzles that reward curiosity over certainty. If you're not sure, that's the right feeling.",
+    body2: "Six puzzles that reward curiosity over certainty. If you're not sure, that's the right feeling.",
   },
   editorNote: "I chose these passages because they made me uncomfortable in the best way. The writers here don't pretend to know more than they do. That honesty is rare, and worth playing with.",
 };
@@ -1099,28 +1084,6 @@ const firstLightPuzzles: Puzzle[] = [
     hint: "Bravery, then fear, then realizing they're the same, then choosing meaning.",
   },
   {
-    id: "fl-rearrange-02",
-    mechanic: "rearrange",
-    source: {
-      title: "The Morning Everything Changed",
-      author: "Dante Ruiz",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "After the call, I sat in the kitchen for an hour.",
-        "I didn't cry. I didn't call anyone.",
-        "I just watched the light move across the table.",
-        "It occurred to me that the light didn't know anything had changed.",
-        "The world doesn't pause for your emergencies.",
-        "Somehow that was the most comforting thought I'd had all morning.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "hard",
-    hint: "Stillness, then observation, then realization, then unexpected comfort.",
-  },
-  {
     id: "fl-spellcheck-01",
     mechanic: "spellcheck",
     source: {
@@ -1140,27 +1103,6 @@ const firstLightPuzzles: Puzzle[] = [
     },
     difficulty: "easy",
     hint: "Both are common misspellings. The vowel combinations are tricky.",
-  },
-  {
-    id: "fl-spellcheck-02",
-    mechanic: "spellcheck",
-    source: {
-      title: "The Morning Everything Changed",
-      author: "Dante Ruiz",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "Grief doesn't arrive all at once. It seeps in threw the cracks of ordinary moments — a song on the radio, a resturant you used to go to together, the phantom buzz of a phone call that will never come. You don't get over it. You get used to the geography of it.",
-      errors: [
-        { wrong: "threw", correct: "through" },
-        { wrong: "resturant", correct: "restaurant" },
-      ],
-      corrected_passage:
-        "Grief doesn't arrive all at once. It seeps in through the cracks of ordinary moments — a song on the radio, a restaurant you used to go to together, the phantom buzz of a phone call that will never come. You don't get over it. You get used to the geography of it.",
-    },
-    difficulty: "medium",
-    hint: "One threw a ball; the other is a passage. And French cuisine is hard to spell.",
   },
   {
     id: "fl-highlight-01",
@@ -1184,6 +1126,29 @@ const firstLightPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "Readers tend to highlight the sentence that gives the passage its thesis — the one that makes sense of everything before it.",
+  },
+  {
+    id: "fl-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "Starting Over at Fifty",
+      author: "Ruth Kessler",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "Everyone told me I was brave for starting a new career at fifty.",
+        "I didn't feel brave. I felt terrified.",
+        "But terror and excitement, I was learning, feel almost identical.",
+        "The same racing heart, the same sleepless nights.",
+        "The only difference is the story you tell yourself about what comes next.",
+        "I chose the story where this was a beginning.",
+      ],
+      correct_index: 4,
+      highlight_density: [0.05, 0.10, 0.19, 0.08, 0.42, 0.16],
+    },
+    difficulty: "medium",
+    hint: "Readers highlight the sentence that reframes fear as something other than failure — where the pivot happens in the mind.",
   },
 ];
 
