@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import type { RearrangePuzzle as RearrangePuzzleType } from "../types";
 import { Attribution } from "./Attribution";
 
@@ -7,150 +7,252 @@ interface Props {
   onComplete: () => void;
 }
 
-interface DragState {
-  /** Index in the current display order */
-  fromIndex: number;
-  y: number;
-  startY: number;
-  lineHeight: number;
+interface DragInfo {
+  line: string;
+  /** "bank" or slot index the line is coming from */
+  origin: "bank" | number;
+  /** Index in the shuffled bank array */
+  bankIndex?: number;
 }
 
 export function RearrangePuzzle({ puzzle, onComplete }: Props) {
-  const { lines, shuffled_order } = puzzle.content;
+  const { lines, movable_indices } = puzzle.content;
+  const totalSlots = movable_indices.length;
 
-  // Current order tracks indices into the lines array
-  const [order, setOrder] = useState<number[]>(() => [...shuffled_order]);
-  const [drag, setDrag] = useState<DragState | null>(null);
-  const [showHint, setShowHint] = useState(false);
-  const [justSwapped, setJustSwapped] = useState<number | null>(null);
-  const [wrongLines, setWrongLines] = useState<Set<number>>(new Set());
-
-  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const correctOrder = lines.map((_, i) => i);
-  const solved = order.every((val, i) => val === correctOrder[i]);
-
-  // Find which display position the pointer is closest to
-  const getInsertIndex = useCallback(
-    (clientY: number): number => {
-      for (let i = 0; i < order.length; i++) {
-        const el = lineRefs.current[i];
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        const mid = rect.top + rect.height / 2;
-        if (clientY < mid) return i;
-      }
-      return order.length - 1;
-    },
-    [order]
+  // Which lines go in slots — correct answers in slot order
+  const slotAnswers = useMemo(
+    () => movable_indices.map((i) => lines[i]),
+    [lines, movable_indices]
   );
 
-  function startDrag(displayIndex: number, e: React.PointerEvent) {
-    if (solved) return;
-    e.preventDefault();
-    try {
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    } catch {
-      // May fail in some environments
-    }
-    const el = lineRefs.current[displayIndex];
-    setDrag({
-      fromIndex: displayIndex,
-      y: e.clientY,
-      startY: e.clientY,
-      lineHeight: el?.getBoundingClientRect().height ?? 60,
+  // Shuffled bank of movable lines
+  const shuffledBank = useMemo(() => {
+    const movableLines = movable_indices.map((i) => lines[i]);
+    return [...movableLines].sort((a, b) => {
+      const hashA = a.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
+      const hashB = b.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
+      return hashA - hashB;
     });
-    setWrongLines(new Set());
+  }, [lines, movable_indices]);
+
+  const [filled, setFilled] = useState<(string | null)[]>(
+    () => new Array(totalSlots).fill(null)
+  );
+  const [isDragging, setIsDragging] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [wrongSlots, setWrongSlots] = useState<Set<number>>(new Set());
+  const [justPlaced, setJustPlaced] = useState<number | null>(null);
+
+  const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<DragInfo | null>(null);
+  const filledRef = useRef(filled);
+  filledRef.current = filled;
+  const lastHoverSlot = useRef<number | null>(null);
+
+  const solved = filled.every((line, i) => line === slotAnswers[i]);
+  const allFilled = filled.every((line) => line !== null);
+
+  // Check which bank cards are used
+  function isBankUsed(bankIndex: number): boolean {
+    const line = shuffledBank[bankIndex];
+    let bankOccurrence = 0;
+    for (let i = 0; i <= bankIndex; i++) {
+      if (shuffledBank[i] === line) bankOccurrence++;
+    }
+    let placedCount = 0;
+    for (const f of filled) {
+      if (f === line) placedCount++;
+    }
+    const drag = dragRef.current;
+    if (isDragging && drag && drag.origin === "bank" && shuffledBank[drag.bankIndex!] === line) {
+      placedCount++;
+    }
+    return bankOccurrence <= placedCount;
   }
 
-  function moveDrag(e: React.PointerEvent) {
-    if (!drag) return;
-    e.preventDefault();
-    setDrag({ ...drag, y: e.clientY });
-  }
+  // Check answers when all slots filled
+  useEffect(() => {
+    if (!allFilled || solved) return;
+    const wrong = new Set<number>();
+    filled.forEach((line, i) => {
+      if (line !== slotAnswers[i]) wrong.add(i);
+    });
+    if (wrong.size > 0) {
+      setWrongSlots(wrong);
+      const t = setTimeout(() => setWrongSlots(new Set()), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [allFilled, filled, slotAnswers, solved]);
 
-  function endDrag(e: React.PointerEvent) {
-    if (!drag) return;
-    e.preventDefault();
-    const toIndex = getInsertIndex(e.clientY);
-
-    if (toIndex !== drag.fromIndex) {
-      const next = [...order];
-      const [moved] = next.splice(drag.fromIndex, 1);
-      next.splice(toIndex, 0, moved);
-      setOrder(next);
-      setJustSwapped(toIndex);
-      setTimeout(() => setJustSwapped(null), 300);
-
-      // Check if solved after move
-      const isSolved = next.every((val, i) => val === correctOrder[i]);
-      if (!isSolved) {
-        // Check which lines are wrong
-        const wrong = new Set<number>();
-        next.forEach((val, i) => {
-          if (val !== correctOrder[i]) wrong.add(i);
-        });
-        // Only show wrong indicators if more than half are placed
-        const correctCount = next.filter((val, i) => val === correctOrder[i]).length;
-        if (correctCount >= Math.floor(lines.length / 2)) {
-          setWrongLines(wrong);
-          setTimeout(() => setWrongLines(new Set()), 1500);
-        }
+  // Hit-test which slot the pointer is over
+  function getSlotAtPoint(x: number, y: number): number | null {
+    for (let i = 0; i < totalSlots; i++) {
+      const el = slotRefs.current[i];
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      const pad = 8;
+      if (
+        x >= rect.left - pad &&
+        x <= rect.right + pad &&
+        y >= rect.top - pad &&
+        y <= rect.bottom + pad
+      ) {
+        return i;
       }
     }
-
-    setDrag(null);
+    return null;
   }
 
-  // Compute visual offset for the dragged line
-  const dragOffsetY = drag ? drag.y - drag.startY : 0;
+  function updateHoverHighlight(slotIndex: number | null) {
+    if (lastHoverSlot.current === slotIndex) return;
+    if (lastHoverSlot.current !== null) {
+      slotRefs.current[lastHoverSlot.current]?.classList.remove("rearrange-slot-hover");
+    }
+    if (slotIndex !== null) {
+      slotRefs.current[slotIndex]?.classList.add("rearrange-slot-hover");
+    }
+    lastHoverSlot.current = slotIndex;
+  }
+
+  // Native event listeners for smooth drag
+  useEffect(() => {
+    function onMove(e: PointerEvent) {
+      if (!dragRef.current) return;
+      e.preventDefault();
+      const ghost = ghostRef.current;
+      if (ghost) {
+        ghost.style.left = `${e.clientX - 60}px`;
+        ghost.style.top = `${e.clientY - 24}px`;
+      }
+      updateHoverHighlight(getSlotAtPoint(e.clientX, e.clientY));
+    }
+
+    function onUp(e: PointerEvent) {
+      const drag = dragRef.current;
+      if (!drag) return;
+      e.preventDefault();
+
+      const targetSlot = getSlotAtPoint(e.clientX, e.clientY);
+      const currentFilled = filledRef.current;
+
+      if (targetSlot !== null) {
+        const next = [...currentFilled];
+        if (drag.origin === "bank") {
+          next[targetSlot] = drag.line;
+        } else {
+          const fromSlot = drag.origin as number;
+          if (targetSlot !== fromSlot) {
+            const temp = next[targetSlot];
+            next[targetSlot] = next[fromSlot];
+            next[fromSlot] = temp;
+          }
+        }
+        setFilled(next);
+        setJustPlaced(targetSlot);
+        setTimeout(() => setJustPlaced(null), 300);
+      } else if (drag.origin !== "bank") {
+        // Dragged from slot to nowhere — remove
+        const next = [...currentFilled];
+        next[drag.origin as number] = null;
+        setFilled(next);
+      }
+
+      // Clean up
+      updateHoverHighlight(null);
+      const ghost = ghostRef.current;
+      if (ghost) ghost.style.display = "none";
+
+      if (drag.origin === "bank" && drag.bankIndex !== undefined) {
+        const cards = containerRef.current?.querySelectorAll(".rearrange-card");
+        const el = cards?.[drag.bankIndex] as HTMLElement;
+        if (el) el.classList.remove("rearrange-card-dragging");
+      }
+
+      dragRef.current = null;
+      setIsDragging(false);
+    }
+
+    document.addEventListener("pointermove", onMove, { passive: false });
+    document.addEventListener("pointerup", onUp);
+    return () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+    };
+  }, [totalSlots]);
+
+  function startDrag(
+    line: string,
+    origin: "bank" | number,
+    bankIndex: number | undefined,
+    e: React.PointerEvent
+  ) {
+    if (solved) return;
+    e.preventDefault();
+
+    dragRef.current = { line, origin, bankIndex };
+    setIsDragging(true);
+    setWrongSlots(new Set());
+
+    const ghost = ghostRef.current;
+    if (ghost) {
+      ghost.textContent = line;
+      ghost.style.display = "block";
+      ghost.style.left = `${e.clientX - 60}px`;
+      ghost.style.top = `${e.clientY - 24}px`;
+      ghost.style.transform = "scale(1.03)";
+    }
+
+    if (origin === "bank" && bankIndex !== undefined) {
+      const cards = containerRef.current?.querySelectorAll(".rearrange-card");
+      const el = cards?.[bankIndex] as HTMLElement;
+      if (el) el.classList.add("rearrange-card-dragging");
+    }
+  }
+
+  // Build the passage: fixed lines + slots for movable lines
+  const movableSet = new Set(movable_indices);
+  let slotCounter = 0;
 
   return (
-    <div
-      className="rearrange-puzzle"
-      ref={containerRef}
-      onPointerMove={moveDrag}
-      onPointerUp={endDrag}
-      style={{ touchAction: drag ? "none" : "auto" }}
-    >
-      <p className="instruction">Drag lines into the right order</p>
+    <div className="rearrange-puzzle" ref={containerRef}>
+      <p className="instruction">Drag each line into its place</p>
 
-      <div className="rearrange-lines">
-        {order.map((lineIndex, displayIndex) => {
-          const isDragging = drag?.fromIndex === displayIndex;
-          const isCorrect = solved;
-          const isWrong = wrongLines.has(displayIndex);
-          const isSnap = justSwapped === displayIndex;
+      <div className="rearrange-passage">
+        {lines.map((line, lineIndex) => {
+          if (movableSet.has(lineIndex)) {
+            const slotIdx = slotCounter++;
+            const filledLine = filled[slotIdx];
+            const isBeingDragged = isDragging && dragRef.current?.origin === slotIdx;
 
-          return (
-            <div
-              key={lineIndex}
-              ref={(el) => {
-                lineRefs.current[displayIndex] = el;
-              }}
-              className={[
-                "rearrange-line",
-                isDragging ? "rearrange-line-dragging" : "",
-                isCorrect ? "rearrange-line-correct" : "",
-                isWrong ? "rearrange-line-wrong" : "",
-                isSnap ? "rearrange-line-snap" : "",
-              ].join(" ")}
-              onPointerDown={(e) => startDrag(displayIndex, e)}
-              style={
-                isDragging
-                  ? {
-                      transform: `translateY(${dragOffsetY}px) scale(1.02)`,
-                      zIndex: 50,
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
-                    }
-                  : undefined
-              }
-            >
-              <span className="rearrange-grip">⠿</span>
-              <span className="rearrange-text">{lines[lineIndex]}</span>
-            </div>
-          );
+            return (
+              <div
+                key={lineIndex}
+                ref={(el) => { slotRefs.current[slotIdx] = el; }}
+                className={[
+                  "rearrange-slot",
+                  filledLine ? "rearrange-slot-filled" : "rearrange-slot-empty",
+                  wrongSlots.has(slotIdx) ? "rearrange-slot-wrong" : "",
+                  justPlaced === slotIdx ? "rearrange-slot-snap" : "",
+                  solved ? "rearrange-slot-solved" : "",
+                ].join(" ")}
+                onPointerDown={(e) => {
+                  if (filledLine && !isBeingDragged) {
+                    startDrag(filledLine, slotIdx, undefined, e);
+                  }
+                }}
+              >
+                {filledLine && !isBeingDragged ? filledLine : "\u00A0"}
+              </div>
+            );
+          } else {
+            return (
+              <div key={lineIndex} className={`rearrange-fixed ${solved ? "rearrange-fixed-solved" : ""}`}>
+                {line}
+              </div>
+            );
+          }
         })}
       </div>
 
@@ -164,16 +266,47 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
           </button>
         </div>
       ) : (
-        <div className="hint-area">
-          {showHint ? (
-            <p className="hint-text">{puzzle.hint}</p>
-          ) : (
-            <button className="hint-button" onClick={() => setShowHint(true)}>
-              Hint
-            </button>
-          )}
-        </div>
+        <>
+          <div className="rearrange-bank">
+            {shuffledBank.map((line, i) => {
+              const used = isBankUsed(i);
+              return (
+                <div
+                  key={`${line}-${i}`}
+                  className={`rearrange-card ${used ? "rearrange-card-used" : ""}`}
+                  onPointerDown={(e) => {
+                    if (!used) startDrag(line, "bank", i, e);
+                  }}
+                >
+                  {line}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hint-area">
+            {showHint ? (
+              <p className="hint-text">{puzzle.hint}</p>
+            ) : (
+              <button className="hint-button" onClick={() => setShowHint(true)}>
+                Hint
+              </button>
+            )}
+          </div>
+        </>
       )}
+
+      {/* Ghost element for drag */}
+      <div
+        ref={ghostRef}
+        className="rearrange-card rearrange-card-ghost"
+        style={{
+          display: "none",
+          position: "fixed",
+          pointerEvents: "none",
+          zIndex: 1000,
+        }}
+      />
 
       <Attribution source={puzzle.source} showReadLink={solved} />
     </div>

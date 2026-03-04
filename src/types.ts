@@ -25,10 +25,10 @@ export interface RearrangePuzzle {
   mechanic: "rearrange";
   source: PuzzleSource;
   content: {
-    /** Lines in their correct order */
+    /** All lines in their correct order */
     lines: string[];
-    /** Starting order (indices into lines array) */
-    shuffled_order: number[];
+    /** Which line indices are movable (pulled out as draggable cards) */
+    movable_indices: number[];
   };
   difficulty: "easy" | "medium" | "hard";
   hint: string;

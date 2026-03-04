@@ -7,16 +7,10 @@ interface Props {
   onComplete: () => void;
 }
 
-interface DragState {
+interface DragInfo {
   word: string;
-  /** "bank" or blank index the word is coming from */
   origin: "bank" | number;
-  /** Which chip index in the bank (for tracking duplicates) */
   chipIndex?: number;
-  x: number;
-  y: number;
-  startX: number;
-  startY: number;
 }
 
 export function FillPuzzle({ puzzle, onComplete }: Props) {
@@ -26,19 +20,22 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
   const [filled, setFilled] = useState<(string | null)[]>(
     () => new Array(totalBlanks).fill(null)
   );
-  const [drag, setDrag] = useState<DragState | null>(null);
-  const [hoverBlank, setHoverBlank] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [wrongBlanks, setWrongBlanks] = useState<Set<number>>(new Set());
   const [justPlaced, setJustPlaced] = useState<number | null>(null);
 
   const blankRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<DragInfo | null>(null);
+  const filledRef = useRef(filled);
+  filledRef.current = filled;
+  const lastHoverBlank = useRef<number | null>(null);
 
   const solved = filled.every((w, i) => w === answers[i]);
   const allFilled = filled.every((w) => w !== null);
 
-  // Shuffle chips
   const shuffledChips = useMemo(() => {
     return [...answers].sort((a, b) => {
       const hashA = a.split("").reduce((acc, c, i) => acc + c.charCodeAt(0) * (i + 1), 0);
@@ -47,7 +44,6 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
     });
   }, [answers]);
 
-  // Track which bank chips are used
   const isChipUsed = useCallback(
     (chipIndex: number) => {
       const word = shuffledChips[chipIndex];
@@ -59,16 +55,15 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
       for (const f of filled) {
         if (f === word) placedCount++;
       }
-      // Also count if currently being dragged from bank
-      if (drag && drag.origin === "bank" && shuffledChips[drag.chipIndex!] === word) {
+      const drag = dragRef.current;
+      if (isDragging && drag && drag.origin === "bank" && shuffledChips[drag.chipIndex!] === word) {
         placedCount++;
       }
       return chipOccurrence <= placedCount;
     },
-    [shuffledChips, filled, drag]
+    [shuffledChips, filled, isDragging]
   );
 
-  // Check answers when all blanks filled
   useEffect(() => {
     if (!allFilled || solved) return;
     const wrong = new Set<number>();
@@ -77,19 +72,16 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
     });
     if (wrong.size > 0) {
       setWrongBlanks(wrong);
-      // Clear wrong indicators after a moment
       const t = setTimeout(() => setWrongBlanks(new Set()), 1200);
       return () => clearTimeout(t);
     }
   }, [allFilled, filled, answers, solved]);
 
-  // Hit-test which blank the pointer is over
   function getBlankAtPoint(x: number, y: number): number | null {
     for (let i = 0; i < totalBlanks; i++) {
       const el = blankRefs.current[i];
       if (!el) continue;
       const rect = el.getBoundingClientRect();
-      // Generous hit area
       const pad = 12;
       if (
         x >= rect.left - pad &&
@@ -103,6 +95,82 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
     return null;
   }
 
+  function updateHoverHighlight(blankIndex: number | null) {
+    if (lastHoverBlank.current === blankIndex) return;
+    if (lastHoverBlank.current !== null) {
+      blankRefs.current[lastHoverBlank.current]?.classList.remove("fill-slot-hover");
+    }
+    if (blankIndex !== null) {
+      blankRefs.current[blankIndex]?.classList.add("fill-slot-hover");
+    }
+    lastHoverBlank.current = blankIndex;
+  }
+
+  // Native event listeners — zero React overhead during drag
+  useEffect(() => {
+    function onMove(e: PointerEvent) {
+      if (!dragRef.current) return;
+      e.preventDefault();
+      const ghost = ghostRef.current;
+      if (ghost) {
+        ghost.style.left = `${e.clientX - 40}px`;
+        ghost.style.top = `${e.clientY - 20}px`;
+      }
+      updateHoverHighlight(getBlankAtPoint(e.clientX, e.clientY));
+    }
+
+    function onUp(e: PointerEvent) {
+      const drag = dragRef.current;
+      if (!drag) return;
+      e.preventDefault();
+
+      const targetBlank = getBlankAtPoint(e.clientX, e.clientY);
+      const currentFilled = filledRef.current;
+
+      if (targetBlank !== null) {
+        const next = [...currentFilled];
+        if (drag.origin === "bank") {
+          next[targetBlank] = drag.word;
+        } else {
+          const fromBlank = drag.origin as number;
+          if (targetBlank !== fromBlank) {
+            const temp = next[targetBlank];
+            next[targetBlank] = next[fromBlank];
+            next[fromBlank] = temp;
+          }
+        }
+        setFilled(next);
+        setJustPlaced(targetBlank);
+        setTimeout(() => setJustPlaced(null), 300);
+      } else if (drag.origin !== "bank") {
+        const next = [...currentFilled];
+        next[drag.origin as number] = null;
+        setFilled(next);
+      }
+
+      // Clean up
+      updateHoverHighlight(null);
+      const ghost = ghostRef.current;
+      if (ghost) ghost.style.display = "none";
+
+      if (drag.origin === "bank" && drag.chipIndex !== undefined) {
+        const chipEl = containerRef.current?.querySelectorAll(".chip")[drag.chipIndex] as HTMLElement;
+        if (chipEl) chipEl.classList.remove("chip-dragging");
+      }
+
+      dragRef.current = null;
+      setIsDragging(false);
+    }
+
+    document.addEventListener("pointermove", onMove, { passive: false });
+    document.addEventListener("pointerup", onUp);
+
+    return () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+    };
+  }, [totalBlanks]);
+
   function startDrag(
     word: string,
     origin: "bank" | number,
@@ -111,87 +179,33 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
   ) {
     if (solved) return;
     e.preventDefault();
-    try { (e.target as HTMLElement).setPointerCapture(e.pointerId); } catch {
-      // Pointer capture may fail in some environments
-    }
-    setDrag({
-      word,
-      origin,
-      chipIndex,
-      x: e.clientX,
-      y: e.clientY,
-      startX: e.clientX,
-      startY: e.clientY,
-    });
+
+    dragRef.current = { word, origin, chipIndex };
+    setIsDragging(true);
     setWrongBlanks(new Set());
-  }
 
-  function moveDrag(e: React.PointerEvent) {
-    if (!drag) return;
-    e.preventDefault();
-    setDrag({ ...drag, x: e.clientX, y: e.clientY });
-    setHoverBlank(getBlankAtPoint(e.clientX, e.clientY));
-  }
-
-  function endDrag(e: React.PointerEvent) {
-    if (!drag) return;
-    e.preventDefault();
-    const targetBlank = getBlankAtPoint(e.clientX, e.clientY);
-
-    if (targetBlank !== null) {
-      const next = [...filled];
-
-      if (drag.origin === "bank") {
-        // Dropping from bank into a blank
-        if (next[targetBlank] === null) {
-          next[targetBlank] = drag.word;
-        } else {
-          // Blank already occupied — swap back to bank, place new word
-          // (old word goes back automatically since it's no longer in filled)
-          next[targetBlank] = drag.word;
-        }
-      } else {
-        // Dragging from one blank to another
-        const fromBlank = drag.origin as number;
-        if (targetBlank === fromBlank) {
-          // Dropped back on same blank — no change
-        } else {
-          // Swap
-          const temp = next[targetBlank];
-          next[targetBlank] = next[fromBlank];
-          next[fromBlank] = temp;
-        }
-      }
-
-      setFilled(next);
-      setJustPlaced(targetBlank);
-      setTimeout(() => setJustPlaced(null), 300);
-    } else if (drag.origin !== "bank") {
-      // Dragged from a blank to nowhere — remove it
-      const next = [...filled];
-      next[drag.origin as number] = null;
-      setFilled(next);
+    const ghost = ghostRef.current;
+    if (ghost) {
+      ghost.textContent = word;
+      ghost.style.display = "block";
+      ghost.style.left = `${e.clientX - 40}px`;
+      ghost.style.top = `${e.clientY - 20}px`;
+      ghost.style.transform = "scale(1.08)";
     }
 
-    setDrag(null);
-    setHoverBlank(null);
+    if (origin === "bank" && chipIndex !== undefined) {
+      const chipEl = containerRef.current?.querySelectorAll(".chip")[chipIndex] as HTMLElement;
+      if (chipEl) chipEl.classList.add("chip-dragging");
+    }
   }
 
-  // Split the passage around blanks
   const segments = puzzle.content.passage.split("______");
-
-  // Compute drag offset for the floating chip
-  const dragOffset = drag
-    ? { x: drag.x - drag.startX, y: drag.y - drag.startY }
-    : null;
 
   return (
     <div
       className="fill-puzzle"
       ref={containerRef}
-      onPointerMove={moveDrag}
-      onPointerUp={endDrag}
-      style={{ touchAction: drag ? "none" : "auto" }}
+      style={{ touchAction: isDragging ? "none" : "auto" }}
     >
       <p className="instruction">Drag each word into its blank</p>
 
@@ -206,18 +220,15 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
                   className={[
                     "fill-slot",
                     filled[i] ? "fill-slot-filled" : "fill-slot-empty",
-                    hoverBlank === i && drag ? "fill-slot-hover" : "",
                     wrongBlanks.has(i) ? "fill-slot-wrong" : "",
                     justPlaced === i ? "fill-slot-snap" : "",
                     solved ? "fill-slot-solved" : "",
                   ].join(" ")}
                   onPointerDown={(e) => {
-                    if (filled[i]) {
-                      startDrag(filled[i]!, i, undefined, e);
-                    }
+                    if (filled[i]) startDrag(filled[i]!, i, undefined, e);
                   }}
                 >
-                  {filled[i] && !(drag && drag.origin === i) ? filled[i] : "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"}
+                  {filled[i] && !(isDragging && dragRef.current?.origin === i) ? filled[i] : "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"}
                 </span>
               )}
             </span>
@@ -239,47 +250,19 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
           <div className="word-chips">
             {shuffledChips.map((word, i) => {
               const used = isChipUsed(i);
-              const isDragging = drag?.origin === "bank" && drag.chipIndex === i;
               return (
                 <span
                   key={`${word}-${i}`}
-                  className={`chip ${used && !isDragging ? "chip-used" : ""} ${isDragging ? "chip-dragging" : ""}`}
+                  className={`chip ${used ? "chip-used" : ""}`}
                   onPointerDown={(e) => {
                     if (!used) startDrag(word, "bank", i, e);
                   }}
-                  style={
-                    isDragging && dragOffset
-                      ? {
-                          transform: `translate(${dragOffset.x}px, ${dragOffset.y}px) rotate(${Math.min(Math.max(dragOffset.x * 0.15, -8), 8)}deg) scale(1.08)`,
-                          zIndex: 100,
-                          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-                          position: "relative" as const,
-                        }
-                      : undefined
-                  }
                 >
                   {word}
                 </span>
               );
             })}
           </div>
-
-          {/* Floating ghost for blank-origin drags */}
-          {drag && drag.origin !== "bank" && (
-            <div
-              className="chip chip-ghost"
-              style={{
-                position: "fixed",
-                left: drag.x - 40,
-                top: drag.y - 20,
-                transform: `rotate(${Math.min(Math.max((drag.x - drag.startX) * 0.15, -8), 8)}deg) scale(1.08)`,
-                pointerEvents: "none",
-                zIndex: 1000,
-              }}
-            >
-              {drag.word}
-            </div>
-          )}
 
           <div className="hint-area">
             {showHint ? (
@@ -292,6 +275,17 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
           </div>
         </>
       )}
+
+      <div
+        ref={ghostRef}
+        className="chip chip-ghost"
+        style={{
+          display: "none",
+          position: "fixed",
+          pointerEvents: "none",
+          zIndex: 1000,
+        }}
+      />
 
       <Attribution source={puzzle.source} showReadLink={solved} />
     </div>

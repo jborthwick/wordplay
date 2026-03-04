@@ -301,83 +301,131 @@ body {
   gap: 28px;
 }
 
-.rearrange-lines {
+/* Passage with fixed lines and slots */
+.rearrange-passage {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  padding: 24px 0;
+  border-top: 1px solid #e8e8e4;
+  border-bottom: 1px solid #e8e8e4;
 }
 
-.rearrange-line {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  border: 1.5px solid #e8e8e4;
-  border-radius: 10px;
-  background: white;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
-  position: relative;
-}
-
-.rearrange-line:hover {
-  border-color: #ccc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.rearrange-line:active {
-  cursor: grabbing;
-}
-
-.rearrange-line-dragging {
-  cursor: grabbing;
-  border-color: #1a1a1a;
-  background: #fafaf8;
-}
-
-.rearrange-line-correct {
-  border-color: #c8e6c9;
-  background: #f1f8f2;
-  cursor: default;
-}
-
-.rearrange-line-wrong {
-  animation: slotShake 0.4s ease;
-  border-color: #f5c6bc;
-  background: #fdf6f4;
-}
-
-.rearrange-line-snap {
-  animation: slotSnap 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.rearrange-grip {
-  font-size: 16px;
-  color: #ccc;
-  flex-shrink: 0;
-  line-height: 1.5;
-  transition: color 0.15s;
-}
-
-.rearrange-line:hover .rearrange-grip {
-  color: #999;
-}
-
-.rearrange-line-dragging .rearrange-grip {
-  color: #666;
-}
-
-.rearrange-line-correct .rearrange-grip {
-  color: #a5d6a7;
-}
-
-.rearrange-text {
+.rearrange-fixed {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 17px;
   line-height: 1.5;
   color: #1a1a1a;
+  padding: 8px 0;
+}
+
+.rearrange-fixed-solved {
+  color: #1a1a1a;
+}
+
+/* Slots (empty or filled) */
+.rearrange-slot {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  min-height: 48px;
+  cursor: default;
+}
+
+.rearrange-slot-empty {
+  background: #f0efe8;
+  border: 1.5px dashed #ccc;
+  color: transparent;
+}
+
+.rearrange-slot-filled {
+  background: #edf5f0;
+  color: #2d6a4f;
+  border: 1.5px solid transparent;
+  cursor: grab;
+  font-weight: 500;
+}
+
+.rearrange-slot-filled:active {
+  cursor: grabbing;
+}
+
+.rearrange-slot-hover {
+  background: #e8f0e4;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.2);
+  border-color: transparent;
+}
+
+.rearrange-slot-wrong {
+  animation: slotShake 0.4s ease;
+  background: #fdf0ed;
+  color: #cc6b5a;
+}
+
+.rearrange-slot-snap {
+  animation: slotSnap 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rearrange-slot-solved {
+  background: transparent;
+  color: #1a1a1a;
+  border-color: transparent;
+  font-weight: 400;
+}
+
+/* Draggable line cards (bank) */
+.rearrange-bank {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rearrange-card {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 12px 18px;
+  border: 1.5px solid #d4d4cf;
+  border-radius: 10px;
+  background: white;
+  color: #1a1a1a;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color 0.15s, background 0.15s, opacity 0.2s, transform 0.15s, box-shadow 0.15s;
+}
+
+.rearrange-card:hover {
+  border-color: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.rearrange-card:active {
+  cursor: grabbing;
+}
+
+.rearrange-card-used {
+  opacity: 0.2;
+  cursor: default;
+  transform: scale(0.97);
+  border-style: dashed;
+}
+
+.rearrange-card-dragging {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #1a1a1a;
+  z-index: 100;
+  cursor: grabbing;
+}
+
+.rearrange-card-ghost {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: #1a1a1a;
+  background: white;
+  max-width: 500px;
 }
 
 /* Attribution */
@@ -465,12 +513,13 @@ body {
     gap: 12px;
   }
 
-  .rearrange-text {
+  .rearrange-fixed,
+  .rearrange-slot {
     font-size: 18px;
   }
 
-  .rearrange-line {
-    padding: 16px 18px;
+  .rearrange-card {
+    font-size: 17px;
   }
 
   .feedback-message {
@@ -527,12 +576,17 @@ body {
     gap: 28px;
   }
 
-  .rearrange-text {
+  .rearrange-fixed,
+  .rearrange-slot {
     font-size: 19px;
   }
 
-  .rearrange-line {
-    padding: 18px 20px;
+  .rearrange-card {
+    font-size: 18px;
+  }
+
+  .rearrange-passage {
+    padding: 28px 0;
   }
 
   .pack-complete {
