@@ -24,13 +24,17 @@ React + TypeScript + Vite. No backend. Puzzle data lives in `src/data/puzzles.ts
 A passage with blanks. Drag the correct word from a bank of plausible options. Remove the most *characterful* word — the one that reveals the author's sensibility. Distractors must be same part of speech, similar register, semantically adjacent.
 
 ### Rearrange
-A passage with some lines out of order. Drag lines from a bank into empty slots. Works best with essays that have a clear argumentative or narrative arc.
+A passage with some lines out of order. All movable slots are pre-filled with shuffled lines — drag to swap slots until the argument flows. "Lock In" checks answers; wrong slots shake and unlock for another try. Works best with essays that have a clear argumentative or narrative arc.
 
 ### Spellcheck
 A passage with 2–4 deliberate errors (misspellings, wrong-but-plausible word swaps). Tap the wrong words. The game is noticing, not hunting.
 
 ### Highlight ★
-Wordplay's original mechanic, inspired by Medium's highlight feature. A passage is displayed; the player taps the sentence they think was most highlighted by readers. On commit, a heatmap reveals highlight density per sentence. Tests *judgment* — the ability to sense a passage's gravitational center.
+Wordplay's original mechanic, inspired by Medium's highlight feature. A passage is displayed as flowing text; the player click-drags to highlight the sentence they think was most highlighted by readers. On commit, a heatmap reveals highlight density per sentence. Tests *judgment* — the ability to sense a passage's gravitational center.
+
+## Pack Composition
+
+Each pack contains exactly **6 puzzles**: 2 fills · 1 rearrange · 1 spellcheck · 2 highlights. Order is randomized each session in `PackView`. The daily pack uses a date-seeded shuffle in `puzzles.ts`; archive packs shuffle on mount.
 
 ## Writing Puzzle Content
 
@@ -55,6 +59,10 @@ The copy sounds like a thoughtful editor — curious, warm, precise. Not chirpy,
 3. **Tone calibration**: All copy should match the voice above.
 4. **Mechanic expansion**: New mechanics must *serve the text*, not just use it as raw material. Honor the writing and the author.
 5. **The Wordplay difference**: Push decisions toward making Wordplay its own thing, not a clone of any other game. Highlight is the template — mechanics that could only exist here.
+
+## Deployment
+
+GitHub Pages via `.github/workflows/deploy.yml`. Pushes to `main` auto-deploy. Vite base is `/wordplay/`. Live at `https://jborthwick.github.io/wordplay/`.
 
 ## Out of Scope (current)
 
