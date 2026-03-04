@@ -41,7 +41,6 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
     () => new Array(totalSlots).fill(null)
   );
   const [isDragging, setIsDragging] = useState(false);
-  const [showHint, setShowHint] = useState(false);
   const [wrongSlots, setWrongSlots] = useState<Set<number>>(new Set());
   const [justPlaced, setJustPlaced] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -228,14 +227,6 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
     <div className="rearrange-puzzle" ref={containerRef}>
       <div className="puzzle-header">
         <Attribution source={puzzle.source} showReadLink={solved} />
-        {!solved && !showHint && !outOfMistakes && (
-          <button className="hint-icon-button" onClick={() => setShowHint(true)} title="Hint">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18h6" /><path d="M10 22h4" />
-              <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
-            </svg>
-          </button>
-        )}
       </div>
 
       <div className="rearrange-passage">
@@ -305,7 +296,6 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
           </div>
 
           <div className="hint-area">
-            {showHint && <p className="hint-text">{puzzle.hint}</p>}
             {outOfMistakes && (
               <button className="reveal-button" onClick={handleReveal}>
                 Reveal answer

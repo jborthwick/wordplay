@@ -59,6 +59,7 @@ export function PackView({ pack, onRestart, onBack }: Props) {
   const [completed, setCompleted] = useState(false);
   const [mistakes, setMistakes] = useState(0);
   const [flawless, setFlawless] = useState(true);
+  const [showHint, setShowHint] = useState(false);
 
   const handleMistake = useCallback(() => {
     setMistakes((m) => m + 1);
@@ -68,10 +69,27 @@ export function PackView({ pack, onRestart, onBack }: Props) {
   function handlePuzzleComplete() {
     if (currentIndex < puzzles.length - 1) {
       setCurrentIndex(currentIndex + 1);
+      setShowHint(false); // Reset hint for next puzzle
     } else {
       setCompleted(true);
     }
   }
+
+  // Debug: arrow keys to skip forward/back between puzzles
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (showWelcome || completed) return;
+      if (e.key === "ArrowRight" && currentIndex < puzzles.length - 1) {
+        setCurrentIndex((i) => i + 1);
+        setShowHint(false);
+      } else if (e.key === "ArrowLeft" && currentIndex > 0) {
+        setCurrentIndex((i) => i - 1);
+        setShowHint(false);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showWelcome, completed, currentIndex, puzzles.length]);
 
   // Save to localStorage when pack is completed
   useEffect(() => {
@@ -188,8 +206,22 @@ export function PackView({ pack, onRestart, onBack }: Props) {
   return (
     <div className="pack-view">
       <header className="pack-header">
-        <p className="pack-title">{title}</p>
-        <p className="pack-editor">Edited by {editor}</p>
+        <div className="pack-header-info">
+          <p className="pack-title">{title}</p>
+          <p className="pack-editor">Edited by {editor}</p>
+        </div>
+        {!outOfMistakes && (
+          <button
+            className="hint-icon-button"
+            onClick={() => setShowHint((v) => !v)}
+            title="Hint"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18h6" /><path d="M10 22h4" />
+              <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
+            </svg>
+          </button>
+        )}
       </header>
 
       <div className="pack-status-bar">
@@ -213,6 +245,17 @@ export function PackView({ pack, onRestart, onBack }: Props) {
           ))}
         </div>
       </div>
+
+      {showHint && (
+        <div className="hint-modal-backdrop" onClick={() => setShowHint(false)}>
+          <div className="hint-modal" onClick={(e) => e.stopPropagation()}>
+            <p className="hint-modal-text">{puzzle.hint}</p>
+            <button className="hint-modal-close" onClick={() => setShowHint(false)}>
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="puzzle-enter" key={puzzle.id}>
         {puzzle.mechanic === "fill" && (

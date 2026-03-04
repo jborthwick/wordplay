@@ -7,5 +7,16 @@ Now:
 [x] welcome note: remove the wordplay name at the top
 [x] move the hint button to the top right, and turn it into a light bulb icon in a button shape
 
-[ ] fill out 6 packs with mock content, based around themes.
-[ ] add a completion state to the packs on welcome screen to show which have been done, and what your score was.
+[X] fill out 6 packs with mock content, based around themes.
+[X] add a completion state to the packs on welcome screen to show which have been done, and what your score was.
+
+[X] dragging chips on desktop got offset somehow: chips appear 200px right and 100px down from my mouse cursor while dragging
+[X] add a mock list of source articles at the end, like a reading list, paired with the editor's note, to each pack.
+[X] add a back button on a pack's welcome note to go back to the start screen
+[x] add unique, themed, welcome messages to note, instead of boilerplate
+[ ] move hint button up to the top right, across from the pack title. 
+[ ] have hints reveal in modal instead of at the bottom fo the page
+[ ] hint button can be tapped as many times as you want to reopen panel
+[ ] for debug purposes, enable arrow keys to skip forward and back in a puzzle
+[ ] Allow skipipng, with arrow keys, of the 6th question in a pack to get to the end note.
+
