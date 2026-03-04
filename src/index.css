@@ -1368,7 +1368,8 @@ body {
   font-size: 22px;
   line-height: 1.65;
   color: var(--text);
-  cursor: text;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .highlight-paragraph-revealed {

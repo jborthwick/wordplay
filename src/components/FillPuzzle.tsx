@@ -213,7 +213,6 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
     <div
       className="fill-puzzle"
       ref={containerRef}
-      style={{ touchAction: isDragging ? "none" : "auto" }}
     >
       <div className="passage">
         <p className="mechanic-label">Fill</p>
@@ -232,6 +231,7 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
                     justPlaced === i ? "fill-slot-snap" : "",
                     solved ? "fill-slot-solved" : "",
                   ].join(" ")}
+                  style={{ touchAction: "none" }}
                   onPointerDown={(e) => {
                     if (filled[i]) startDrag(filled[i]!, i, undefined, e);
                   }}
@@ -252,6 +252,7 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
               <span
                 key={`${word}-${i}`}
                 className={`chip ${used ? "chip-used" : ""}`}
+                style={{ touchAction: "none" }}
                 onPointerDown={(e) => {
                   if (!used) startDrag(word, "bank", i, e);
                 }}

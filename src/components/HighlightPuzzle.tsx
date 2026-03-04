@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import type { HighlightPuzzle as HighlightPuzzleType } from "../types";
 import { Attribution } from "./Attribution";
 
@@ -21,59 +21,16 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
   const maxDensity = Math.max(...highlight_density);
 
   const sentenceRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const paragraphRef = useRef<HTMLDivElement>(null);
 
-  // Use native browser text selection — on mouseup, capture which sentences
-  // the user highlighted and convert to our styled selection
-  useEffect(() => {
+  function handleSentenceTap(i: number) {
     if (revealed) return;
-
-    function handlePointerUp() {
-      requestAnimationFrame(() => {
-        const sel = window.getSelection();
-        if (!sel || sel.rangeCount === 0) return;
-
-        // Single click (no drag) — clear our selection
-        if (sel.isCollapsed) {
-          // Only clear if the click was inside our paragraph
-          const para = paragraphRef.current;
-          if (para && sel.anchorNode && para.contains(sel.anchorNode)) {
-            setSelection(null);
-          }
-          return;
-        }
-
-        // Make sure the selection is within our paragraph
-        const para = paragraphRef.current;
-        if (!para) return;
-        const range = sel.getRangeAt(0);
-        if (!para.contains(range.commonAncestorContainer)) return;
-
-        // Find which sentence spans overlap with the native selection
-        let startIdx: number | null = null;
-        let endIdx: number | null = null;
-
-        for (let i = 0; i < sentences.length; i++) {
-          const el = sentenceRefs.current[i];
-          if (!el) continue;
-          if (sel.containsNode(el, true)) {
-            if (startIdx === null) startIdx = i;
-            endIdx = i;
-          }
-        }
-
-        // Clear native selection, apply our styled highlight
-        sel.removeAllRanges();
-
-        if (startIdx !== null && endIdx !== null) {
-          setSelection([startIdx, endIdx]);
-        }
-      });
+    // Tapping the already-selected single sentence clears it
+    if (selection !== null && selection[0] === i && selection[1] === i) {
+      setSelection(null);
+    } else {
+      setSelection([i, i]);
     }
-
-    document.addEventListener("pointerup", handlePointerUp);
-    return () => document.removeEventListener("pointerup", handlePointerUp);
-  }, [revealed, sentences.length]);
+  }
 
   function clearSelection() {
     if (revealed) return;
@@ -125,13 +82,10 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
       <div className="highlight-passage">
         <p className="mechanic-label">Highlight</p>
         <p className="instruction">
-          {revealed ? "Here's what readers highlighted" : "Click and drag to highlight the sentence readers loved most"}
+          {revealed ? "Here's what readers highlighted" : "Tap the sentence readers loved most"}
         </p>
 
-        <div
-          ref={paragraphRef}
-          className={`highlight-paragraph ${revealed ? "highlight-paragraph-revealed" : ""}`}
-        >
+        <div className={`highlight-paragraph ${revealed ? "highlight-paragraph-revealed" : ""}`}>
           {sentences.map((sentence, i) => {
             const isCorrect = i === correct_index;
             const wasPicked = selection !== null && isInSelection(i);
@@ -158,8 +112,9 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
                 style={
                   revealed
                     ? { "--density": normDensity } as React.CSSProperties
-                    : undefined
+                    : { cursor: "pointer" }
                 }
+                onClick={() => handleSentenceTap(i)}
               >
                 {sentence}
                 {revealed && isCorrect && (
