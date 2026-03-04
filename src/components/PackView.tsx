@@ -80,9 +80,14 @@ export function PackView({ pack, onRestart, onBack }: Props) {
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (showWelcome || completed) return;
-      if (e.key === "ArrowRight" && currentIndex < puzzles.length - 1) {
-        setCurrentIndex((i) => i + 1);
-        setShowHint(false);
+      if (e.key === "ArrowRight") {
+        if (currentIndex < puzzles.length - 1) {
+          setCurrentIndex((i) => i + 1);
+          setShowHint(false);
+        } else {
+          // Past last puzzle — jump to end note
+          setCompleted(true);
+        }
       } else if (e.key === "ArrowLeft" && currentIndex > 0) {
         setCurrentIndex((i) => i - 1);
         setShowHint(false);

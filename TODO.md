@@ -14,9 +14,10 @@ Now:
 [X] add a mock list of source articles at the end, like a reading list, paired with the editor's note, to each pack.
 [X] add a back button on a pack's welcome note to go back to the start screen
 [x] add unique, themed, welcome messages to note, instead of boilerplate
-[ ] move hint button up to the top right, across from the pack title. 
-[ ] have hints reveal in modal instead of at the bottom fo the page
-[ ] hint button can be tapped as many times as you want to reopen panel
-[ ] for debug purposes, enable arrow keys to skip forward and back in a puzzle
-[ ] Allow skipipng, with arrow keys, of the 6th question in a pack to get to the end note.
-
+[X] move hint button up to the top right, across from the pack title.
+[X] have hints reveal in modal instead of at the bottom fo the page
+[X] hint button can be tapped as many times as you want to reopen panel
+[X] for debug purposes, enable arrow keys to skip forward and back in a puzzle
+[X] Allow skipping, with arrow keys, of the last question in a pack to get to the end note.
+[X] For spellcheck mechanic: Add a shimmer effect to the right answers, its a bit hard right now and requires much rereading.
+[X] for highlight mechanic: try a different layout for the lines. put them in a paragraph form and allow more natural click-and-drag highlighting. Single clicking anywhere in the paragraph resets the highlight, until you lock in.
