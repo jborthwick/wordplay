@@ -163,7 +163,8 @@ function CompletedView({ puzzleCount, mistakes, mistakeWord, flawless, outOfMist
 }
 
 export function PackView({ pack, onRestart, onBack }: Props) {
-  const { puzzles, title, editor } = pack;
+  const { title, editor } = pack;
+  const [puzzles] = useState(() => [...pack.puzzles].sort(() => Math.random() - 0.5));
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [completed, setCompleted] = useState(false);
