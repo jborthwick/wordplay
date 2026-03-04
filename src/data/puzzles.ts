@@ -1,4 +1,4 @@
-import type { FillPuzzle, RearrangePuzzle, SpellcheckPuzzle, Pack, Puzzle } from "../types";
+import type { FillPuzzle, RearrangePuzzle, SpellcheckPuzzle, HighlightPuzzle, Pack, Puzzle } from "../types";
 
 // ─── Helpers ──────────────────────────────────────────────
 
@@ -237,6 +237,55 @@ const spellcheckPuzzles: SpellcheckPuzzle[] = [
   },
 ];
 
+const dailyHighlights: HighlightPuzzle[] = [
+  {
+    id: "daily-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "The Quiet Crisis in How We Read",
+      author: "Elena Marsh",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "We read more words per day than any generation in history.",
+        "But we read them the way we breathe — automatically, without attention.",
+        "The crisis isn't that people stopped reading.",
+        "It's that reading stopped requiring us to be present.",
+        "A book demands something of you. A feed does not.",
+        "And slowly, we forgot the difference.",
+      ],
+      correct_index: 3,
+      highlight_density: [0.05, 0.12, 0.08, 0.42, 0.22, 0.11],
+    },
+    difficulty: "medium",
+    hint: "Look for the sentence that reframes the whole argument — the one that shifts what the crisis actually is.",
+  },
+  {
+    id: "daily-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "On Walking Without a Destination",
+      author: "Priya Sharma",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "I started walking when the apartment got too small for my thoughts.",
+        "There was no route, no goal, no podcast in my ears.",
+        "Just feet on pavement and the slow return of my own thinking.",
+        "Somewhere around the third mile, the noise in my head went quiet.",
+        "Not silent — quiet. The way a lake goes still after a storm.",
+        "I've been walking every day since.",
+      ],
+      correct_index: 4,
+      highlight_density: [0.08, 0.06, 0.14, 0.12, 0.45, 0.15],
+    },
+    difficulty: "medium",
+    hint: "The most highlighted sentence is usually the one with the sharpest image — not the idea, but the feeling made visible.",
+  },
+];
+
 // ─── Daily Pack ───────────────────────────────────────────
 
 export const dailyPack: Pack = {
@@ -248,9 +297,10 @@ export const dailyPack: Pack = {
       fillPuzzles[0],
       rearrangePuzzles[0],
       spellcheckPuzzles[0],
+      dailyHighlights[0],
       fillPuzzles[1],
       rearrangePuzzles[1],
-      spellcheckPuzzles[1],
+      dailyHighlights[1],
     ],
     dateSeed
   ),
@@ -363,6 +413,29 @@ const smallTruthsPuzzles: Puzzle[] = [
     },
     difficulty: "hard",
     hint: "One word flatters; the other completes. And check who's being left.",
+  },
+  {
+    id: "st-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "What My Grandmother Knew About Silence",
+      author: "Jia Lin",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "My grandmother rarely spoke at family dinners.",
+        "She'd sit at the end of the table, hands folded, watching us argue about nothing.",
+        "I used to think she had nothing to say.",
+        "Now I think she had everything to say, and chose not to.",
+        "Silence, in her hands, wasn't absence. It was precision.",
+        "She said more by listening than the rest of us managed in hours of talking.",
+      ],
+      correct_index: 4,
+      highlight_density: [0.04, 0.08, 0.10, 0.18, 0.43, 0.17],
+    },
+    difficulty: "medium",
+    hint: "Look for the sentence that redefines silence — where it stops being a lack and becomes something else.",
   },
 ];
 
@@ -503,6 +576,29 @@ const againstTheClockPuzzles: Puzzle[] = [
     difficulty: "easy",
     hint: "Both are common misspellings. Sound them out carefully.",
   },
+  {
+    id: "atc-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "What I Learned From My Father's Urgency",
+      author: "Kenji Mori",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "My father retired on a Friday and started painting on a Monday.",
+        "Not because he'd always wanted to paint.",
+        "Because he'd always wanted to want something badly enough to begin.",
+        "He told me, 'I spent forty years being responsible. Now I'm going to be alive.'",
+        "He wasn't very good at painting.",
+        "He was magnificent at beginning.",
+      ],
+      correct_index: 3,
+      highlight_density: [0.07, 0.05, 0.16, 0.40, 0.06, 0.26],
+    },
+    difficulty: "medium",
+    hint: "The most highlighted line is often the one where someone speaks — where the mask comes off.",
+  },
 ];
 
 const againstTheClock: Pack = {
@@ -598,6 +694,29 @@ const longViewPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "One word describes climate. The other describes choice. And check your vowels.",
+  },
+  {
+    id: "lv-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "The Slow Art of Getting Better",
+      author: "Diana Reyes",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "Nobody tells you that mastery is mostly boredom.",
+        "You do the same thing, in the same room, for years.",
+        "The improvements are invisible to everyone, including you.",
+        "And then one day, your hands know something your mind hasn't caught up to yet.",
+        "That's the moment. Not a breakthrough — a recognition.",
+        "You've been good for a while. You just didn't notice.",
+      ],
+      correct_index: 3,
+      highlight_density: [0.10, 0.06, 0.08, 0.44, 0.18, 0.14],
+    },
+    difficulty: "medium",
+    hint: "The most highlighted sentence often captures a felt experience — something the reader's body recognizes before their mind does.",
   },
 ];
 
@@ -739,6 +858,29 @@ const quietMachinesPuzzles: Puzzle[] = [
     difficulty: "medium",
     hint: "One is a common contraction mistake. The other is a spelling error — think about what letters are actually there.",
   },
+  {
+    id: "qm-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "The Algorithm Knows You Better Than You Do",
+      author: "Sana Malik",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "The algorithm doesn't care about your intentions.",
+        "It cares about your 2 AM scrolling, your hesitations, the posts you almost liked but didn't.",
+        "It reads the you that you don't perform.",
+        "And it reflects that person back with terrifying accuracy.",
+        "We say we want to be understood. We don't.",
+        "We want to be understood on our own terms. The algorithm has no terms. Just data.",
+      ],
+      correct_index: 2,
+      highlight_density: [0.06, 0.14, 0.38, 0.20, 0.12, 0.10],
+    },
+    difficulty: "hard",
+    hint: "Short sentences that reframe everything tend to get the most highlights. Look for the pivot.",
+  },
 ];
 
 const quietMachines: Pack = {
@@ -857,6 +999,29 @@ const openQuestionsPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "One is a comparison word. One means to release, not to misplace. One is missing a letter.",
+  },
+  {
+    id: "oq-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "What My Daughter Taught Me About Doubt",
+      author: "Michael Adeyemi",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "My daughter asked me if the sky was sad when it rained.",
+        "I started to say no, then stopped.",
+        "What kind of person answers a child's question with a fact?",
+        "She wasn't asking about weather. She was asking if the world had feelings.",
+        "And honestly, I'm not sure it doesn't.",
+        "Some questions are better left open, like windows in a warm room.",
+      ],
+      correct_index: 5,
+      highlight_density: [0.06, 0.04, 0.15, 0.14, 0.19, 0.42],
+    },
+    difficulty: "medium",
+    hint: "The most highlighted line is often the one with a metaphor that ties everything together.",
   },
 ];
 
@@ -996,6 +1161,29 @@ const firstLightPuzzles: Puzzle[] = [
     },
     difficulty: "medium",
     hint: "One threw a ball; the other is a passage. And French cuisine is hard to spell.",
+  },
+  {
+    id: "fl-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "The Morning Everything Changed",
+      author: "Dante Ruiz",
+      story_url: "#",
+    },
+    content: {
+      sentences: [
+        "I woke up early the day after my mother died and made coffee.",
+        "Same mug, same kitchen, same view of the backyard.",
+        "Everything was identical, and nothing was the same.",
+        "I stood there holding a cup of coffee like it was the only real thing left in the world.",
+        "And maybe it was. Maybe that's how grief works.",
+        "It doesn't take things away. It changes what the remaining things mean.",
+      ],
+      correct_index: 5,
+      highlight_density: [0.08, 0.05, 0.18, 0.14, 0.10, 0.45],
+    },
+    difficulty: "medium",
+    hint: "Readers tend to highlight the sentence that gives the passage its thesis — the one that makes sense of everything before it.",
   },
 ];
 

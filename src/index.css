@@ -1281,6 +1281,143 @@ body {
   color: var(--text-faint);
 }
 
+/* Highlight Puzzle */
+.highlight-puzzle {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.highlight-passage {
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.highlight-sentences {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.highlight-sentence {
+  position: relative;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  border: 1.5px solid transparent;
+}
+
+.highlight-sentence:hover:not(.highlight-sentence-revealed) {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.highlight-sentence-selected {
+  background: rgba(168, 210, 89, 0.12);
+  border-color: rgba(168, 210, 89, 0.4);
+}
+
+.highlight-sentence-selected:hover {
+  background: rgba(168, 210, 89, 0.16);
+}
+
+.highlight-sentence-text {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--text);
+  transition: opacity 0.4s;
+}
+
+.highlight-sentence-revealed {
+  cursor: default;
+  border-color: transparent;
+  background: transparent;
+}
+
+.highlight-sentence-revealed .highlight-sentence-text {
+  opacity: calc(0.3 + 0.7 * var(--density, 0));
+}
+
+.highlight-sentence-correct {
+  background: rgba(168, 210, 89, 0.14);
+  border-color: rgba(168, 210, 89, 0.5);
+}
+
+.highlight-sentence-correct .highlight-sentence-text {
+  opacity: 1;
+  color: var(--text);
+}
+
+.highlight-sentence-pick {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-style: dashed;
+}
+
+/* Density bar */
+.highlight-density-bar {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.highlight-density-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(168, 210, 89, 0.5);
+  transition: width 0.6s ease-out;
+}
+
+.highlight-sentence-correct .highlight-density-fill {
+  background: rgba(168, 210, 89, 0.8);
+}
+
+/* Badges */
+.highlight-badge {
+  display: inline-block;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.highlight-badge-top {
+  background: rgba(168, 210, 89, 0.2);
+  color: #b8d86a;
+}
+
+.highlight-badge-you {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-faint);
+}
+
+/* Actions */
+.highlight-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+}
+
+.highlight-commit {
+  animation: fade-in 0.2s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ---- Desktop breakpoints ---- */
 
 /* Tablet and up */

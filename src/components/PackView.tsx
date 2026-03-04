@@ -3,6 +3,7 @@ import type { Pack } from "../types";
 import { FillPuzzle } from "./FillPuzzle";
 import { RearrangePuzzle } from "./RearrangePuzzle";
 import { SpellcheckPuzzle } from "./SpellcheckPuzzle";
+import { HighlightPuzzle } from "./HighlightPuzzle";
 import { saveCompletion } from "../data/completion";
 
 interface Props {
@@ -276,6 +277,14 @@ export function PackView({ pack, onRestart, onBack }: Props) {
         )}
         {puzzle.mechanic === "spellcheck" && (
           <SpellcheckPuzzle
+            puzzle={puzzle}
+            onComplete={handlePuzzleComplete}
+            onMistake={handleMistake}
+            outOfMistakes={outOfMistakes}
+          />
+        )}
+        {puzzle.mechanic === "highlight" && (
+          <HighlightPuzzle
             puzzle={puzzle}
             onComplete={handlePuzzleComplete}
             onMistake={handleMistake}

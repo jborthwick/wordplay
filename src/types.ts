@@ -50,7 +50,23 @@ export interface SpellcheckPuzzle {
   hint: string;
 }
 
-export type Puzzle = FillPuzzle | RearrangePuzzle | SpellcheckPuzzle;
+export interface HighlightPuzzle {
+  id: string;
+  mechanic: "highlight";
+  source: PuzzleSource;
+  content: {
+    /** Array of sentences displayed as the passage */
+    sentences: string[];
+    /** Index of the "most highlighted" sentence (correct answer) */
+    correct_index: number;
+    /** Normalised highlight density per sentence (0–1, sums to ~1) */
+    highlight_density: number[];
+  };
+  difficulty: "easy" | "medium" | "hard";
+  hint: string;
+}
+
+export type Puzzle = FillPuzzle | RearrangePuzzle | SpellcheckPuzzle | HighlightPuzzle;
 
 export interface Pack {
   title: string;
