@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { Pack } from "../types";
 import { FillPuzzle } from "./FillPuzzle";
 import { RearrangePuzzle } from "./RearrangePuzzle";
 import { SpellcheckPuzzle } from "./SpellcheckPuzzle";
+import { saveCompletion } from "../data/completion";
 
 interface Props {
   pack: Pack;
@@ -70,6 +71,18 @@ export function PackView({ pack, onRestart }: Props) {
       setCompleted(true);
     }
   }
+
+  // Save to localStorage when pack is completed
+  useEffect(() => {
+    if (completed) {
+      saveCompletion(pack.date, {
+        mistakes,
+        flawless,
+        totalPuzzles: puzzles.length,
+        completedAt: new Date().toISOString(),
+      });
+    }
+  }, [completed, pack.date, mistakes, flawless, puzzles.length]);
 
   const outOfMistakes = mistakes >= MAX_MISTAKES;
   const welcome = getDailyWelcome();

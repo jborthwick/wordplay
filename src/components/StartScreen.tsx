@@ -1,11 +1,11 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import type { Pack } from "../types";
-import type { PackSummary } from "../data/puzzles";
+import { getAllCompletions, type PackResult } from "../data/completion";
 
 interface Props {
   pack: Pack;
-  archive: PackSummary[];
-  onPlay: () => void;
+  archive: Pack[];
+  onPlay: (pack: Pack) => void;
 }
 
 function formatPackDate(dateStr: string): string {
@@ -13,22 +13,23 @@ function formatPackDate(dateStr: string): string {
   return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
 
+const MAX_MISTAKES = 5;
+
 export function StartScreen({ pack, archive, onPlay }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Build the full list: archive + today
-  const todaySummary: PackSummary = {
-    title: pack.title,
-    editor: pack.editor,
-    date: pack.date,
-    puzzleCount: pack.puzzles.length,
-  };
-
-  const allPacks = [...archive, todaySummary];
+  const allPacks = [...archive, pack];
   const todayIndex = allPacks.length - 1;
 
   const [activeIndex, setActiveIndex] = useState(todayIndex);
+  const [completions, setCompletions] = useState<Record<string, PackResult>>({});
+
+  // Load completions from localStorage
+  useEffect(() => {
+    setCompletions(getAllCompletions());
+  }, []);
 
   // Find which card is closest to center
   const updateActiveCard = useCallback(() => {
@@ -85,6 +86,7 @@ export function StartScreen({ pack, archive, onPlay }: Props) {
 
   const activePack = allPacks[activeIndex];
   const isActiveToday = activeIndex === todayIndex;
+  const activeCompletion = completions[activePack.date];
 
   const handleCardClick = useCallback((index: number) => {
     const container = scrollRef.current;
@@ -112,15 +114,16 @@ export function StartScreen({ pack, archive, onPlay }: Props) {
           {allPacks.map((p, i) => {
             const isActive = i === activeIndex;
             const isToday = i === todayIndex;
+            const result = completions[p.date];
             return (
               <div
                 key={p.date}
                 ref={(el) => { cardRefs.current[i] = el; }}
-                className={`pack-card ${isActive ? "pack-card-active" : "pack-card-inactive"}`}
+                className={`pack-card ${isActive ? "pack-card-active" : "pack-card-inactive"} ${result ? "pack-card-done" : ""}`}
                 onClick={() => {
-                  if (isActive && isToday) {
-                    onPlay();
-                  } else if (!isActive) {
+                  if (isActive) {
+                    onPlay(allPacks[i]);
+                  } else {
                     handleCardClick(i);
                   }
                 }}
@@ -128,7 +131,21 @@ export function StartScreen({ pack, archive, onPlay }: Props) {
                 <span className="pack-card-date">{formatPackDate(p.date)}</span>
                 <span className="pack-card-title">{p.title}</span>
                 <span className="pack-card-editor">{p.editor}</span>
-                <span className="pack-card-count">{p.puzzleCount} puzzles</span>
+                {result ? (
+                  <span className="pack-card-result">
+                    <span className="pack-card-dots">
+                      {Array.from({ length: MAX_MISTAKES }).map((_, j) => (
+                        <span
+                          key={j}
+                          className={`pack-card-dot ${j < MAX_MISTAKES - result.mistakes ? "pack-card-dot-full" : "pack-card-dot-empty"}`}
+                        />
+                      ))}
+                    </span>
+                    {result.flawless && <span className="pack-card-flawless">Flawless</span>}
+                  </span>
+                ) : (
+                  <span className="pack-card-count">{p.puzzles.length} puzzles</span>
+                )}
                 {isToday && <span className="pack-card-badge">Today</span>}
               </div>
             );
@@ -138,10 +155,11 @@ export function StartScreen({ pack, archive, onPlay }: Props) {
 
       <button
         className="start-play-button"
-        onClick={onPlay}
-        disabled={!isActiveToday}
+        onClick={() => onPlay(allPacks[activeIndex])}
       >
-        {isActiveToday ? "Play" : formatPackDate(activePack.date)}
+        {activeCompletion
+          ? (isActiveToday ? "Play again" : `Replay ${activePack.title}`)
+          : (isActiveToday ? "Play" : `Play ${activePack.title}`)}
       </button>
 
       <button className="start-submit-button">

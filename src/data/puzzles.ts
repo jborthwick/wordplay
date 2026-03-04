@@ -1,6 +1,35 @@
-import { FillPuzzle, RearrangePuzzle, SpellcheckPuzzle, Pack } from "../types";
+import type { FillPuzzle, RearrangePuzzle, SpellcheckPuzzle, Pack, Puzzle } from "../types";
 
-export const fillPuzzles: FillPuzzle[] = [
+// ─── Helpers ──────────────────────────────────────────────
+
+function localDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function daysAgo(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return localDateStr(d);
+}
+
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const result = [...arr];
+  let s = seed;
+  for (let i = result.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    const j = (s >>> 0) % (i + 1);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+const today = new Date();
+const dateSeed =
+  today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+
+// ─── Daily Pack Puzzles ───────────────────────────────────
+
+const fillPuzzles: FillPuzzle[] = [
   {
     id: "fill-01",
     mechanic: "fill",
@@ -93,7 +122,7 @@ export const fillPuzzles: FillPuzzle[] = [
   },
 ];
 
-export const rearrangePuzzles: RearrangePuzzle[] = [
+const rearrangePuzzles: RearrangePuzzle[] = [
   {
     id: "rearrange-01",
     mechanic: "rearrange",
@@ -162,7 +191,7 @@ export const rearrangePuzzles: RearrangePuzzle[] = [
   },
 ];
 
-export const spellcheckPuzzles: SpellcheckPuzzle[] = [
+const spellcheckPuzzles: SpellcheckPuzzle[] = [
   {
     id: "spellcheck-01",
     mechanic: "spellcheck",
@@ -208,59 +237,752 @@ export const spellcheckPuzzles: SpellcheckPuzzle[] = [
   },
 ];
 
-// Seeded shuffle so order is consistent per day but varies day-to-day
-function seededShuffle<T>(arr: T[], seed: number): T[] {
-  const result = [...arr];
-  let s = seed;
-  for (let i = result.length - 1; i > 0; i--) {
-    s = (s * 1664525 + 1013904223) & 0xffffffff;
-    const j = ((s >>> 0) % (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
+// ─── Daily Pack ───────────────────────────────────────────
 
-const today = new Date();
-const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-
-// Daily pack: mix Fill, Rearrange, and Spellcheck puzzles for variety
 export const dailyPack: Pack = {
   title: "The Weight of Words",
   editor: "The Wordplay Team",
   date: localDateStr(new Date()),
-  puzzles: seededShuffle([
-    fillPuzzles[0],
-    rearrangePuzzles[0],
-    spellcheckPuzzles[0],
-    fillPuzzles[1],
-    rearrangePuzzles[1],
-    spellcheckPuzzles[1],
-  ], dateSeed),
+  puzzles: seededShuffle(
+    [
+      fillPuzzles[0],
+      rearrangePuzzles[0],
+      spellcheckPuzzles[0],
+      fillPuzzles[1],
+      rearrangePuzzles[1],
+      spellcheckPuzzles[1],
+    ],
+    dateSeed
+  ),
 };
 
-// Past packs for the carousel (lightweight — no puzzles needed for display)
-function localDateStr(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+// ─── Archive Pack 1: Small Truths ─────────────────────────
 
-function daysAgo(n: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
-  return localDateStr(d);
-}
+const smallTruthsPuzzles: Puzzle[] = [
+  {
+    id: "st-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "What My Grandmother Knew About Silence",
+      author: "Jia Lin",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "My grandmother never ______ silence. She inhabited it. Where I saw ______, she found presence — the kind that doesn't need to ______ itself.",
+      answers: ["explained", "absence", "prove"],
+      full_passage:
+        "My grandmother never explained silence. She inhabited it. Where I saw absence, she found presence — the kind that doesn't need to prove itself.",
+    },
+    difficulty: "medium",
+    hint: "The contrast is between analyzing and living. Between emptiness and fullness.",
+  },
+  {
+    id: "st-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "The Art of Noticing",
+      author: "Thomas Reid",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "Most people walk past the same ______ every day without seeing them. Not because they're ______, but because attention is a ______ most of us never learned.",
+      answers: ["details", "careless", "skill"],
+      full_passage:
+        "Most people walk past the same details every day without seeing them. Not because they're careless, but because attention is a skill most of us never learned.",
+    },
+    difficulty: "easy",
+    hint: "The author isn't blaming anyone. They're pointing to something trainable.",
+  },
+  {
+    id: "st-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "The Art of Noticing",
+      author: "Thomas Reid",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "I started keeping a notebook of things I noticed.",
+        "Not important things. Ordinary ones.",
+        "The way light hit the kitchen counter at 4 p.m.",
+        "The particular silence after a bus pulls away.",
+        "Within a month, the world looked different.",
+        "Nothing had changed except the quality of my attention.",
+      ],
+      movable_indices: [1, 3, 4],
+    },
+    difficulty: "medium",
+    hint: "The notebook comes first. Then examples. Then the result.",
+  },
+  {
+    id: "st-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "What My Grandmother Knew About Silence",
+      author: "Jia Lin",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "She never offered advise unless you asked for it, and even then she chose her words with a care that made you feel like each one costed her something. That economy of speech wasn't shyness. It was respect.",
+      errors: [
+        { wrong: "advise", correct: "advice" },
+        { wrong: "costed", correct: "cost" },
+      ],
+      corrected_passage:
+        "She never offered advice unless you asked for it, and even then she chose her words with a care that made you feel like each one cost her something. That economy of speech wasn't shyness. It was respect.",
+    },
+    difficulty: "medium",
+    hint: "One is a verb used as a noun. The other is an irregular past tense.",
+  },
+  {
+    id: "st-spellcheck-02",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Art of Noticing",
+      author: "Thomas Reid",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "The compliment of attention is restraint. When you truly notice something, the impulse to photograph it, to share it, to turn it into content — that impulse quiets down. Your left with the thing itself.",
+      errors: [
+        { wrong: "compliment", correct: "complement" },
+        { wrong: "Your", correct: "You're" },
+      ],
+      corrected_passage:
+        "The complement of attention is restraint. When you truly notice something, the impulse to photograph it, to share it, to turn it into content — that impulse quiets down. You're left with the thing itself.",
+    },
+    difficulty: "hard",
+    hint: "One word flatters; the other completes. And check who's being left.",
+  },
+];
 
-export interface PackSummary {
-  title: string;
-  editor: string;
-  date: string;
-  puzzleCount: number;
-}
+const smallTruths: Pack = {
+  title: "Small Truths",
+  editor: "Mia Tan",
+  date: daysAgo(6),
+  puzzles: smallTruthsPuzzles,
+};
 
-export const packArchive: PackSummary[] = [
-  { title: "Small Truths", editor: "Mia Tan", date: daysAgo(6), puzzleCount: 5 },
-  { title: "Against the Clock", editor: "Raj Patel", date: daysAgo(5), puzzleCount: 6 },
-  { title: "The Long View", editor: "Clara Hughes", date: daysAgo(4), puzzleCount: 4 },
-  { title: "Quiet Machines", editor: "Leo Park", date: daysAgo(3), puzzleCount: 6 },
-  { title: "Open Questions", editor: "Nina Osei", date: daysAgo(2), puzzleCount: 5 },
-  { title: "First Light", editor: "Sam Okafor", date: daysAgo(1), puzzleCount: 6 },
+// ─── Archive Pack 2: Against the Clock ────────────────────
+
+const againstTheClockPuzzles: Puzzle[] = [
+  {
+    id: "atc-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "Running Out of Time at Thirty",
+      author: "Kenji Mori",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "At twenty, time felt ______. By thirty, I could hear it. Every ______ came with a quiet awareness that choosing this meant ______ that.",
+      answers: ["infinite", "decision", "losing"],
+      full_passage:
+        "At twenty, time felt infinite. By thirty, I could hear it. Every decision came with a quiet awareness that choosing this meant losing that.",
+    },
+    difficulty: "medium",
+    hint: "The passage tracks a shift from abundance to scarcity.",
+  },
+  {
+    id: "atc-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "The Tyranny of the Calendar",
+      author: "Angela Torres",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "We don't ______ our calendars. They manage us. Every shared invite, every ______ block, every recurring meeting is a small ______ of autonomy we barely notice making.",
+      answers: ["manage", "focus", "surrender"],
+      full_passage:
+        "We don't manage our calendars. They manage us. Every shared invite, every focus block, every recurring meeting is a small surrender of autonomy we barely notice making.",
+    },
+    difficulty: "medium",
+    hint: "The author is reversing who's in control.",
+  },
+  {
+    id: "atc-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "Running Out of Time at Thirty",
+      author: "Kenji Mori",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "I spent my twenties believing there would always be more time.",
+        "More chances to travel, to write, to call my parents back.",
+        "Then one morning I realized I was the age my father was when he had me.",
+        "The arithmetic was simple but it changed everything.",
+        "I wasn't running out of time. I was finally inside it.",
+        "That's a different kind of urgency — not panic, but presence.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "medium",
+    hint: "The setup is about youth, the middle is the turning point, the end is the lesson.",
+  },
+  {
+    id: "atc-rearrange-02",
+    mechanic: "rearrange",
+    source: {
+      title: "The Tyranny of the Calendar",
+      author: "Angela Torres",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "The first thing I did was delete all my recurring meetings.",
+        "Not cancel them — just remove their permanence.",
+        "If a meeting mattered, someone would reschedule it.",
+        "Most didn't come back.",
+        "What filled the space wasn't productivity.",
+        "It was something I hadn't felt in years: boredom. And from boredom, ideas.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "hard",
+    hint: "First the action, then the test, then what emerged.",
+  },
+  {
+    id: "atc-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "Running Out of Time at Thirty",
+      author: "Kenji Mori",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "The hardest part of getting older isn't the physical decline. Its the narrowing of possibility — the slow realization that your life has a boarder now, and everything you choose to do is also a choice about what you'll never do.",
+      errors: [
+        { wrong: "Its", correct: "It's" },
+        { wrong: "boarder", correct: "border" },
+      ],
+      corrected_passage:
+        "The hardest part of getting older isn't the physical decline. It's the narrowing of possibility — the slow realization that your life has a border now, and everything you choose to do is also a choice about what you'll never do.",
+    },
+    difficulty: "medium",
+    hint: "One error is about possession vs. contraction. The other is about edges, not tenants.",
+  },
+  {
+    id: "atc-spellcheck-02",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Tyranny of the Calendar",
+      author: "Angela Torres",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "We treat busyness like a badge of honor, but it's really a sheild. If every hour is accounted for, you never have to face the discomfort of choosing what actually matters. The calendar becomes a conscience — or at least, a convincing substitue for one.",
+      errors: [
+        { wrong: "sheild", correct: "shield" },
+        { wrong: "substitue", correct: "substitute" },
+      ],
+      corrected_passage:
+        "We treat busyness like a badge of honor, but it's really a shield. If every hour is accounted for, you never have to face the discomfort of choosing what actually matters. The calendar becomes a conscience — or at least, a convincing substitute for one.",
+    },
+    difficulty: "easy",
+    hint: "Both are common misspellings. Sound them out carefully.",
+  },
+];
+
+const againstTheClock: Pack = {
+  title: "Against the Clock",
+  editor: "Raj Patel",
+  date: daysAgo(5),
+  puzzles: againstTheClockPuzzles,
+};
+
+// ─── Archive Pack 3: The Long View ────────────────────────
+
+const longViewPuzzles: Puzzle[] = [
+  {
+    id: "lv-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "Lessons from a Ten-Year Experiment",
+      author: "Harold West",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "The thing about long-term projects is that they ______ you. You start with a hypothesis and end with a ______. The person who finishes is never the person who ______.",
+      answers: ["outlast", "confession", "began"],
+      full_passage:
+        "The thing about long-term projects is that they outlast you. You start with a hypothesis and end with a confession. The person who finishes is never the person who began.",
+    },
+    difficulty: "hard",
+    hint: "The passage is about transformation through sustained effort.",
+  },
+  {
+    id: "lv-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "The Slow Art of Getting Better",
+      author: "Diana Reyes",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "Improvement isn't a ______. It's a direction. You don't wake up one morning ______ than you were. You wake up slightly more ______ of what you couldn't see before.",
+      answers: ["destination", "better", "aware"],
+      full_passage:
+        "Improvement isn't a destination. It's a direction. You don't wake up one morning better than you were. You wake up slightly more aware of what you couldn't see before.",
+    },
+    difficulty: "medium",
+    hint: "The author redefines improvement as perception, not achievement.",
+  },
+  {
+    id: "lv-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "Lessons from a Ten-Year Experiment",
+      author: "Harold West",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "In year one, I was full of confidence.",
+        "By year three, I was full of doubt.",
+        "By year five, the doubt had become something else entirely.",
+        "Not confidence again — something quieter.",
+        "A willingness to keep going without needing to know why.",
+        "That, I think, is what patience actually looks like.",
+      ],
+      movable_indices: [1, 3, 4],
+    },
+    difficulty: "medium",
+    hint: "Confidence dissolves into doubt, then into something beyond both.",
+  },
+  {
+    id: "lv-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Slow Art of Getting Better",
+      author: "Diana Reyes",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "Practice doesn't make perfect — that phrase has always been misleading. Practice makes permanant. Whatever you repeat, whether it's good form or bad, becomes the default. The only question is weather you're practicing the right things.",
+      errors: [
+        { wrong: "permanant", correct: "permanent" },
+        { wrong: "weather", correct: "whether" },
+      ],
+      corrected_passage:
+        "Practice doesn't make perfect — that phrase has always been misleading. Practice makes permanent. Whatever you repeat, whether it's good form or bad, becomes the default. The only question is whether you're practicing the right things.",
+    },
+    difficulty: "medium",
+    hint: "One word describes climate. The other describes choice. And check your vowels.",
+  },
+];
+
+const longView: Pack = {
+  title: "The Long View",
+  editor: "Clara Hughes",
+  date: daysAgo(4),
+  puzzles: longViewPuzzles,
+};
+
+// ─── Archive Pack 4: Quiet Machines ───────────────────────
+
+const quietMachinesPuzzles: Puzzle[] = [
+  {
+    id: "qm-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "The Algorithm Knows You Better Than You Do",
+      author: "Sana Malik",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "The algorithm doesn't ______ you. It reflects you — the version of yourself that ______ at two in the morning, the one that searches for ______ in the form of content.",
+      answers: ["judge", "scrolls", "reassurance"],
+      full_passage:
+        "The algorithm doesn't judge you. It reflects you — the version of yourself that scrolls at two in the morning, the one that searches for reassurance in the form of content.",
+    },
+    difficulty: "medium",
+    hint: "The algorithm is a mirror, not a critic.",
+  },
+  {
+    id: "qm-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "Why I Stopped Using My Phone Before Bed",
+      author: "James Cooper",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "The last thing I saw each night was a ______. Not a book, not a person — a screen. I'd ______ through other people's days until my own felt ______ enough to end.",
+      answers: ["glow", "scroll", "small"],
+      full_passage:
+        "The last thing I saw each night was a glow. Not a book, not a person — a screen. I'd scroll through other people's days until my own felt small enough to end.",
+    },
+    difficulty: "hard",
+    hint: "The passage moves from what you see, to what you do, to how it makes you feel.",
+  },
+  {
+    id: "qm-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "The Algorithm Knows You Better Than You Do",
+      author: "Sana Malik",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "I deleted my social media accounts on a Tuesday.",
+        "By Thursday, I'd reinstalled two of them.",
+        "Not because I missed the people.",
+        "Because I missed being known.",
+        "The algorithm had built a version of me that felt more consistent than I did.",
+        "Leaving it behind felt less like freedom and more like forgetting.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "hard",
+    hint: "Deletion leads to return. The reason isn't connection — it's identity.",
+  },
+  {
+    id: "qm-rearrange-02",
+    mechanic: "rearrange",
+    source: {
+      title: "Why I Stopped Using My Phone Before Bed",
+      author: "James Cooper",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "The experiment was simple: no phone after 9 p.m.",
+        "The first night, I didn't know what to do with my hands.",
+        "The second night, I picked up a book I'd bought three years ago.",
+        "By the end of the week, I was sleeping an hour earlier.",
+        "I hadn't gained willpower. I'd just removed the thing competing with rest.",
+        "The phone wasn't keeping me awake. It was keeping me from wanting to sleep.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "medium",
+    hint: "A simple rule, then awkward adjustment, then unexpected discovery, then reframing.",
+  },
+  {
+    id: "qm-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Algorithm Knows You Better Than You Do",
+      author: "Sana Malik",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "The principle danger of personalized feeds isn't misinformation — it's confirmation. When every peice of content confirms what you already believe, disagreement starts to feel like a bug rather then a feature of public life.",
+      errors: [
+        { wrong: "principle", correct: "principal" },
+        { wrong: "peice", correct: "piece" },
+        { wrong: "then", correct: "than" },
+      ],
+      corrected_passage:
+        "The principal danger of personalized feeds isn't misinformation — it's confirmation. When every piece of content confirms what you already believe, disagreement starts to feel like a bug rather than a feature of public life.",
+    },
+    difficulty: "hard",
+    hint: "One is a homophone mix-up. One breaks the i-before-e rule. One confuses sequence with comparison.",
+  },
+  {
+    id: "qm-spellcheck-02",
+    mechanic: "spellcheck",
+    source: {
+      title: "Why I Stopped Using My Phone Before Bed",
+      author: "James Cooper",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "We complain about our devices like there addictions we can't control, but the truth is simpler than that. We use them because the alternative — sitting with our own thoughts — has become genuinely unfamiliar. Boredom isn't the absense of stimulation. It's the presence of yourself.",
+      errors: [
+        { wrong: "there", correct: "they're" },
+        { wrong: "absense", correct: "absence" },
+      ],
+      corrected_passage:
+        "We complain about our devices like they're addictions we can't control, but the truth is simpler than that. We use them because the alternative — sitting with our own thoughts — has become genuinely unfamiliar. Boredom isn't the absence of stimulation. It's the presence of yourself.",
+    },
+    difficulty: "medium",
+    hint: "One is a common contraction mistake. The other is a spelling error — think about what letters are actually there.",
+  },
+];
+
+const quietMachines: Pack = {
+  title: "Quiet Machines",
+  editor: "Leo Park",
+  date: daysAgo(3),
+  puzzles: quietMachinesPuzzles,
+};
+
+// ─── Archive Pack 5: Open Questions ───────────────────────
+
+const openQuestionsPuzzles: Puzzle[] = [
+  {
+    id: "oq-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "The Questions That Don't Have Answers",
+      author: "Lena Ostroff",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "The best teachers I had didn't give answers. They gave ______. A well-placed question can ______ a room in a way that no lecture ever could. It ______ people to think rather than simply agree.",
+      answers: ["questions", "unsettle", "forces"],
+      full_passage:
+        "The best teachers I had didn't give answers. They gave questions. A well-placed question can unsettle a room in a way that no lecture ever could. It forces people to think rather than simply agree.",
+    },
+    difficulty: "medium",
+    hint: "The author values disruption over certainty.",
+  },
+  {
+    id: "oq-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "Learning to Sit with Uncertainty",
+      author: "Michael Adeyemi",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "Certainty is ______. Not because it's wrong, but because it stops the ______. The moment you decide you know, you stop looking. And the world has a way of ______ people who stop looking.",
+      answers: ["expensive", "conversation", "punishing"],
+      full_passage:
+        "Certainty is expensive. Not because it's wrong, but because it stops the conversation. The moment you decide you know, you stop looking. And the world has a way of punishing people who stop looking.",
+    },
+    difficulty: "hard",
+    hint: "Knowledge has a cost — not in being wrong, but in closing doors.",
+  },
+  {
+    id: "oq-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "The Questions That Don't Have Answers",
+      author: "Lena Ostroff",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "My daughter asked me why people die.",
+        "I started to give her the biological answer.",
+        "Then I stopped, because I realized she wasn't asking about biology.",
+        "She was asking whether it was fair.",
+        "I didn't have an answer for that.",
+        "But sitting with her in the not-knowing felt like enough.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "medium",
+    hint: "A question, then an attempted answer, then realizing the real question, then acceptance.",
+  },
+  {
+    id: "oq-rearrange-02",
+    mechanic: "rearrange",
+    source: {
+      title: "Learning to Sit with Uncertainty",
+      author: "Michael Adeyemi",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "I used to think ambiguity was a problem to solve.",
+        "Every gray area was just a decision I hadn't made yet.",
+        "Then I spent a year working on a project with no clear outcome.",
+        "No roadmap, no metrics, no way to know if it was working.",
+        "Somewhere around month six, I stopped needing to know.",
+        "The work itself became the answer.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "hard",
+    hint: "The setup is about certainty. The middle is the challenge. The end is the shift.",
+  },
+  {
+    id: "oq-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Questions That Don't Have Answers",
+      author: "Lena Ostroff",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "Children ask better questions then adults because they haven't yet learned to be embarrassed by not knowing. Curiosity isn't a trait you loose with age — it's one you learn to supress, one awkward silence at a time.",
+      errors: [
+        { wrong: "then", correct: "than" },
+        { wrong: "loose", correct: "lose" },
+        { wrong: "supress", correct: "suppress" },
+      ],
+      corrected_passage:
+        "Children ask better questions than adults because they haven't yet learned to be embarrassed by not knowing. Curiosity isn't a trait you lose with age — it's one you learn to suppress, one awkward silence at a time.",
+    },
+    difficulty: "medium",
+    hint: "One is a comparison word. One means to release, not to misplace. One is missing a letter.",
+  },
+];
+
+const openQuestions: Pack = {
+  title: "Open Questions",
+  editor: "Nina Osei",
+  date: daysAgo(2),
+  puzzles: openQuestionsPuzzles,
+};
+
+// ─── Archive Pack 6: First Light ──────────────────────────
+
+const firstLightPuzzles: Puzzle[] = [
+  {
+    id: "fl-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "Starting Over at Fifty",
+      author: "Ruth Kessler",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "Starting over doesn't mean going back. It means ______ forward with less ______. I'd spent decades accumulating — things, opinions, obligations. Letting go wasn't ______. It was architectural. I was clearing the floor plan.",
+      answers: ["moving", "weight", "emotional"],
+      full_passage:
+        "Starting over doesn't mean going back. It means moving forward with less weight. I'd spent decades accumulating — things, opinions, obligations. Letting go wasn't emotional. It was architectural. I was clearing the floor plan.",
+    },
+    difficulty: "hard",
+    hint: "The metaphor shifts from physical movement to building design.",
+  },
+  {
+    id: "fl-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "The Morning Everything Changed",
+      author: "Dante Ruiz",
+      story_url: "#",
+    },
+    content: {
+      passage:
+        "The phone rang at 6 a.m. on a ______. Nobody calls with good news at that hour. By the time I hung up, every plan I'd made for the next five years had become ______. Not canceled — just suddenly, completely ______.",
+      answers: ["Tuesday", "irrelevant", "optional"],
+      full_passage:
+        "The phone rang at 6 a.m. on a Tuesday. Nobody calls with good news at that hour. By the time I hung up, every plan I'd made for the next five years had become irrelevant. Not canceled — just suddenly, completely optional.",
+    },
+    difficulty: "hard",
+    hint: "The day of the week is mundane. The plans don't disappear — they just stop mattering.",
+  },
+  {
+    id: "fl-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "Starting Over at Fifty",
+      author: "Ruth Kessler",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "Everyone told me I was brave for starting a new career at fifty.",
+        "I didn't feel brave. I felt terrified.",
+        "But terror and excitement, I was learning, feel almost identical.",
+        "The same racing heart, the same sleepless nights.",
+        "The only difference is the story you tell yourself about what comes next.",
+        "I chose the story where this was a beginning.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "medium",
+    hint: "Bravery, then fear, then realizing they're the same, then choosing meaning.",
+  },
+  {
+    id: "fl-rearrange-02",
+    mechanic: "rearrange",
+    source: {
+      title: "The Morning Everything Changed",
+      author: "Dante Ruiz",
+      story_url: "#",
+    },
+    content: {
+      lines: [
+        "After the call, I sat in the kitchen for an hour.",
+        "I didn't cry. I didn't call anyone.",
+        "I just watched the light move across the table.",
+        "It occurred to me that the light didn't know anything had changed.",
+        "The world doesn't pause for your emergencies.",
+        "Somehow that was the most comforting thought I'd had all morning.",
+      ],
+      movable_indices: [1, 3, 5],
+    },
+    difficulty: "hard",
+    hint: "Stillness, then observation, then realization, then unexpected comfort.",
+  },
+  {
+    id: "fl-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "Starting Over at Fifty",
+      author: "Ruth Kessler",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "The hardest part of starting over wasn't learning new things. It was unlearning the old ones. Every instinct I'd developed over thirty years in the same feild was now a liability. My experiance wasn't guiding me — it was anchoring me to a world that no longer existed.",
+      errors: [
+        { wrong: "feild", correct: "field" },
+        { wrong: "experiance", correct: "experience" },
+      ],
+      corrected_passage:
+        "The hardest part of starting over wasn't learning new things. It was unlearning the old ones. Every instinct I'd developed over thirty years in the same field was now a liability. My experience wasn't guiding me — it was anchoring me to a world that no longer existed.",
+    },
+    difficulty: "easy",
+    hint: "Both are common misspellings. The vowel combinations are tricky.",
+  },
+  {
+    id: "fl-spellcheck-02",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Morning Everything Changed",
+      author: "Dante Ruiz",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "Grief doesn't arrive all at once. It seeps in threw the cracks of ordinary moments — a song on the radio, a resturant you used to go to together, the phantom buzz of a phone call that will never come. You don't get over it. You get used to the geography of it.",
+      errors: [
+        { wrong: "threw", correct: "through" },
+        { wrong: "resturant", correct: "restaurant" },
+      ],
+      corrected_passage:
+        "Grief doesn't arrive all at once. It seeps in through the cracks of ordinary moments — a song on the radio, a restaurant you used to go to together, the phantom buzz of a phone call that will never come. You don't get over it. You get used to the geography of it.",
+    },
+    difficulty: "medium",
+    hint: "One threw a ball; the other is a passage. And French cuisine is hard to spell.",
+  },
+];
+
+const firstLight: Pack = {
+  title: "First Light",
+  editor: "Sam Okafor",
+  date: daysAgo(1),
+  puzzles: firstLightPuzzles,
+};
+
+// ─── Exports ──────────────────────────────────────────────
+
+export const packArchive: Pack[] = [
+  smallTruths,
+  againstTheClock,
+  longView,
+  quietMachines,
+  openQuestions,
+  firstLight,
 ];

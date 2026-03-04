@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
+import type { Pack } from "./types";
 import { PackView } from "./components/PackView";
 import { StartScreen } from "./components/StartScreen";
 import { dailyPack, packArchive } from "./data/puzzles";
 
 export default function App() {
-  const [started, setStarted] = useState(false);
+  const [activePack, setActivePack] = useState<Pack | null>(null);
   const [transitioning, setTransitioning] = useState(false);
 
   useEffect(() => {
@@ -26,12 +27,16 @@ export default function App() {
   }, []);
 
   return (
-    <div className={`app ${!started ? "app-start" : ""}`}>
+    <div className={`app ${!activePack ? "app-start" : ""}`}>
       <div className={`screen-transition ${transitioning ? "screen-fade-out" : "screen-fade-in"}`}>
-        {started ? (
-          <PackView pack={dailyPack} onRestart={() => handleTransition(() => setStarted(false))} />
+        {activePack ? (
+          <PackView pack={activePack} onRestart={() => handleTransition(() => setActivePack(null))} />
         ) : (
-          <StartScreen pack={dailyPack} archive={packArchive} onPlay={() => handleTransition(() => setStarted(true))} />
+          <StartScreen
+            pack={dailyPack}
+            archive={packArchive}
+            onPlay={(pack: Pack) => handleTransition(() => setActivePack(pack))}
+          />
         )}
       </div>
     </div>
