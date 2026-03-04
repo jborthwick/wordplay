@@ -30,7 +30,11 @@ export default function App() {
     <div className={`app ${!activePack ? "app-start" : ""}`}>
       <div className={`screen-transition ${transitioning ? "screen-fade-out" : "screen-fade-in"}`}>
         {activePack ? (
-          <PackView pack={activePack} onRestart={() => handleTransition(() => setActivePack(null))} />
+          <PackView
+            pack={activePack}
+            onRestart={() => handleTransition(() => setActivePack(null))}
+            onBack={() => handleTransition(() => setActivePack(null))}
+          />
         ) : (
           <StartScreen
             pack={dailyPack}

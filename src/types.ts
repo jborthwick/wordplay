@@ -57,4 +57,7 @@ export interface Pack {
   editor: string;
   date: string;
   puzzles: Puzzle[];
+  /** Per-pack welcome + editor note copy */
+  welcome?: { body: string; body2: string };
+  editorNote?: string;
 }

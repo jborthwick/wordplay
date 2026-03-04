@@ -8,6 +8,7 @@ import { saveCompletion } from "../data/completion";
 interface Props {
   pack: Pack;
   onRestart: () => void;
+  onBack?: () => void;
 }
 
 const MAX_MISTAKES = 5;
@@ -51,7 +52,7 @@ function getDailyWelcome() {
   return welcomeMessages[dayOfYear % welcomeMessages.length];
 }
 
-export function PackView({ pack, onRestart }: Props) {
+export function PackView({ pack, onRestart, onBack }: Props) {
   const { puzzles, title, editor } = pack;
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -85,16 +86,23 @@ export function PackView({ pack, onRestart }: Props) {
   }, [completed, pack.date, mistakes, flawless, puzzles.length]);
 
   const outOfMistakes = mistakes >= MAX_MISTAKES;
-  const welcome = getDailyWelcome();
+  const welcome = pack.welcome ?? getDailyWelcome();
   const dayOfYear = Math.floor(
     (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
   );
-  const editorNote = editorNotes[dayOfYear % editorNotes.length];
+  const editorNote = pack.editorNote ?? editorNotes[dayOfYear % editorNotes.length];
 
   // Welcome card
   if (showWelcome) {
     return (
       <div className="welcome-card puzzle-enter">
+        {onBack && (
+          <button className="welcome-back-button" onClick={onBack} title="Back">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
         <div className="welcome-content">
           <h2 className="welcome-headline">{title}</h2>
           <p className="welcome-editor">Edited by {editor}</p>
@@ -120,6 +128,17 @@ export function PackView({ pack, onRestart }: Props) {
   // Pack complete
   if (completed) {
     const mistakeWord = mistakes === 1 ? "mistake" : "mistakes";
+
+    // Deduplicate sources by title for the reading list
+    const seenTitles = new Set<string>();
+    const sources = puzzles
+      .map((p) => p.source)
+      .filter((s) => {
+        if (seenTitles.has(s.title)) return false;
+        seenTitles.add(s.title);
+        return true;
+      });
+
     return (
       <div className="pack-complete puzzle-enter">
         <h2>Pack complete</h2>
@@ -142,6 +161,19 @@ export function PackView({ pack, onRestart }: Props) {
           <p className="editor-note-label">A note from the editor</p>
           <p className="editor-note-body">{editorNote}</p>
           <p className="editor-note-sign">— {editor}</p>
+        </div>
+        <div className="reading-list">
+          <p className="reading-list-label">Today's reading list</p>
+          <ul className="reading-list-items">
+            {sources.map((s) => (
+              <li key={s.title} className="reading-list-item">
+                <a href={s.story_url} className="reading-list-link">
+                  <span className="reading-list-title">{s.title}</span>
+                  <span className="reading-list-author">{s.author}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
         <button className="play-again-button" onClick={onRestart}>
           Back to start

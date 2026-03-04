@@ -254,6 +254,11 @@ export const dailyPack: Pack = {
     ],
     dateSeed
   ),
+  welcome: {
+    body: "Words carry more weight than we give them credit for. Today's writers chose each one deliberately — and the puzzles ask you to feel that deliberateness.",
+    body2: "Drag words into place, rearrange scattered lines, and discover passages you might want to read in full when you're done.",
+  },
+  editorNote: "Today's pack was built around the idea that clarity is a practice, not a gift. The writers featured here all found something true by slowing down. We hope the puzzles gave you a reason to do the same.",
 };
 
 // ─── Archive Pack 1: Small Truths ─────────────────────────
@@ -366,6 +371,11 @@ const smallTruths: Pack = {
   editor: "Mia Tan",
   date: daysAgo(6),
   puzzles: smallTruthsPuzzles,
+  welcome: {
+    body: "Today's pack is about the things hiding in plain sight — the truths so quiet you almost miss them. Grandmothers who speak in silences. Notebooks that change how the world looks.",
+    body2: "These puzzles ask you to slow down and notice. The words matter. So does the space between them.",
+  },
+  editorNote: "I built this pack around the idea that wisdom doesn't announce itself. The writers here found something true by paying attention to what most people walk past. I hope the puzzles helped you see that too.",
 };
 
 // ─── Archive Pack 2: Against the Clock ────────────────────
@@ -500,6 +510,11 @@ const againstTheClock: Pack = {
   editor: "Raj Patel",
   date: daysAgo(5),
   puzzles: againstTheClockPuzzles,
+  welcome: {
+    body: "Time is the subject today — not the ticking-clock kind, but the slow realization that your life has borders. These writers found clarity in that awareness.",
+    body2: "Fill in the blanks, rearrange the arguments, and see if urgency can be something other than panic.",
+  },
+  editorNote: "I've been thinking about time differently since putting this pack together. Not as something running out, but as something you can finally feel. The writers here helped me see that. I hope they do the same for you.",
 };
 
 // ─── Archive Pack 3: The Long View ────────────────────────
@@ -591,6 +606,11 @@ const longView: Pack = {
   editor: "Clara Hughes",
   date: daysAgo(4),
   puzzles: longViewPuzzles,
+  welcome: {
+    body: "Patience is underrated. Today's writers spent years — sometimes decades — learning something that couldn't be rushed. Their essays are proof that the slow way is sometimes the only way.",
+    body2: "Four puzzles, each drawn from writing about persistence. Take your time with them. That's sort of the point.",
+  },
+  editorNote: "This pack was the hardest to curate, because the best writing about patience is itself patient. These passages don't hurry. I hope you didn't either.",
 };
 
 // ─── Archive Pack 4: Quiet Machines ───────────────────────
@@ -726,6 +746,11 @@ const quietMachines: Pack = {
   editor: "Leo Park",
   date: daysAgo(3),
   puzzles: quietMachinesPuzzles,
+  welcome: {
+    body: "We built the machines. Now they're building us back. Today's pack explores our relationship with technology — the algorithms that know us, the screens that bookend our days, the boredom we've forgotten how to feel.",
+    body2: "Six puzzles about what we gave up and what we might get back.",
+  },
+  editorNote: "I put my phone down while editing this pack. Not as a stunt — the passages just made it feel strange to be scrolling. That's the sign of writing that works on you, not just in front of you.",
 };
 
 // ─── Archive Pack 5: Open Questions ───────────────────────
@@ -840,6 +865,11 @@ const openQuestions: Pack = {
   editor: "Nina Osei",
   date: daysAgo(2),
   puzzles: openQuestionsPuzzles,
+  welcome: {
+    body: "Some questions don't have answers — and that's not a failure, it's a feature. Today's writers sit with uncertainty, ask the questions their children ask, and find clarity in not-knowing.",
+    body2: "Five puzzles that reward curiosity over certainty. If you're not sure, that's the right feeling.",
+  },
+  editorNote: "I chose these passages because they made me uncomfortable in the best way. The writers here don't pretend to know more than they do. That honesty is rare, and worth playing with.",
 };
 
 // ─── Archive Pack 6: First Light ──────────────────────────
@@ -974,6 +1004,11 @@ const firstLight: Pack = {
   editor: "Sam Okafor",
   date: daysAgo(1),
   puzzles: firstLightPuzzles,
+  welcome: {
+    body: "Beginnings are terrifying. They're also the only way anything new happens. Today's writers started over — at fifty, after a phone call, in a kitchen full of morning light — and found something worth keeping.",
+    body2: "Six puzzles about what it feels like when everything changes and you have to choose what comes next.",
+  },
+  editorNote: "Every essay in this pack is about a moment when the old story ended and a new one had to begin. The writers didn't know how it would turn out. That's what makes their words worth sitting with.",
 };
 
 // ─── Exports ──────────────────────────────────────────────
