@@ -1,4 +1,4 @@
-import { FillPuzzle, RearrangePuzzle, Puzzle } from "../types";
+import { FillPuzzle, RearrangePuzzle, SpellcheckPuzzle, Pack } from "../types";
 
 export const fillPuzzles: FillPuzzle[] = [
   {
@@ -162,12 +162,105 @@ export const rearrangePuzzles: RearrangePuzzle[] = [
   },
 ];
 
-// Daily pack: mix Fill and Rearrange puzzles for variety
-export const dailyPack: Puzzle[] = [
-  fillPuzzles[0],
-  rearrangePuzzles[0],
-  fillPuzzles[1],
-  fillPuzzles[4],
-  rearrangePuzzles[1],
-  fillPuzzles[3],
+export const spellcheckPuzzles: SpellcheckPuzzle[] = [
+  {
+    id: "spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "The Quiet Crisis in How We Read",
+      author: "Elena Marsh",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "The affect of social media on reading is cumulative. We loose the ability to sustain attention not all at once, but gradually — one scroll at a time. What we sacrifice isn't literacy. It's patience, the willingness to let a sentance unfold at its own pace.",
+      errors: [
+        { wrong: "affect", correct: "effect" },
+        { wrong: "loose", correct: "lose" },
+        { wrong: "sentance", correct: "sentence" },
+      ],
+      corrected_passage:
+        "The effect of social media on reading is cumulative. We lose the ability to sustain attention not all at once, but gradually — one scroll at a time. What we sacrifice isn't literacy. It's patience, the willingness to let a sentence unfold at its own pace.",
+    },
+    difficulty: "medium",
+    hint: "One is a grammar error, one is a spelling error, and one requires knowing what the author means.",
+  },
+  {
+    id: "spellcheck-02",
+    mechanic: "spellcheck",
+    source: {
+      title: "Why Every Meeting Could Be an Email",
+      author: "David Chen",
+      story_url: "#",
+    },
+    content: {
+      passage_with_errors:
+        "The principle reason most meetings fail is that they confuse presence with participation. People attend, but they don't contribute. The affect is a room full of witnesses to a conversation that didn't need an audience.",
+      errors: [
+        { wrong: "principle", correct: "principal" },
+        { wrong: "affect", correct: "effect" },
+      ],
+      corrected_passage:
+        "The principal reason most meetings fail is that they confuse presence with participation. People attend, but they don't contribute. The effect is a room full of witnesses to a conversation that didn't need an audience.",
+    },
+    difficulty: "hard",
+    hint: "Both errors involve words that sound right but mean something different. Think about which meaning fits the context.",
+  },
+];
+
+// Seeded shuffle so order is consistent per day but varies day-to-day
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const result = [...arr];
+  let s = seed;
+  for (let i = result.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    const j = ((s >>> 0) % (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+const today = new Date();
+const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+
+// Daily pack: mix Fill, Rearrange, and Spellcheck puzzles for variety
+export const dailyPack: Pack = {
+  title: "The Weight of Words",
+  editor: "The Wordplay Team",
+  date: localDateStr(new Date()),
+  puzzles: seededShuffle([
+    fillPuzzles[0],
+    rearrangePuzzles[0],
+    spellcheckPuzzles[0],
+    fillPuzzles[1],
+    rearrangePuzzles[1],
+    spellcheckPuzzles[1],
+  ], dateSeed),
+};
+
+// Past packs for the carousel (lightweight — no puzzles needed for display)
+function localDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function daysAgo(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return localDateStr(d);
+}
+
+export interface PackSummary {
+  title: string;
+  editor: string;
+  date: string;
+  puzzleCount: number;
+}
+
+export const packArchive: PackSummary[] = [
+  { title: "Small Truths", editor: "Mia Tan", date: daysAgo(6), puzzleCount: 5 },
+  { title: "Against the Clock", editor: "Raj Patel", date: daysAgo(5), puzzleCount: 6 },
+  { title: "The Long View", editor: "Clara Hughes", date: daysAgo(4), puzzleCount: 4 },
+  { title: "Quiet Machines", editor: "Leo Park", date: daysAgo(3), puzzleCount: 6 },
+  { title: "Open Questions", editor: "Nina Osei", date: daysAgo(2), puzzleCount: 5 },
+  { title: "First Light", editor: "Sam Okafor", date: daysAgo(1), puzzleCount: 6 },
 ];

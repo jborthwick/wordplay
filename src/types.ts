@@ -34,4 +34,27 @@ export interface RearrangePuzzle {
   hint: string;
 }
 
-export type Puzzle = FillPuzzle | RearrangePuzzle;
+export interface SpellcheckPuzzle {
+  id: string;
+  mechanic: "spellcheck";
+  source: PuzzleSource;
+  content: {
+    /** Passage with errors baked in */
+    passage_with_errors: string;
+    /** Error words and their corrections */
+    errors: { wrong: string; correct: string }[];
+    /** Clean corrected passage */
+    corrected_passage: string;
+  };
+  difficulty: "easy" | "medium" | "hard";
+  hint: string;
+}
+
+export type Puzzle = FillPuzzle | RearrangePuzzle | SpellcheckPuzzle;
+
+export interface Pack {
+  title: string;
+  editor: string;
+  date: string;
+  puzzles: Puzzle[];
+}

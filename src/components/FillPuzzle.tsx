@@ -5,6 +5,8 @@ import { Attribution } from "./Attribution";
 interface Props {
   puzzle: FillPuzzleType;
   onComplete: () => void;
+  onMistake?: () => void;
+  outOfMistakes?: boolean;
 }
 
 interface DragInfo {
@@ -13,7 +15,7 @@ interface DragInfo {
   chipIndex?: number;
 }
 
-export function FillPuzzle({ puzzle, onComplete }: Props) {
+export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Props) {
   const { answers } = puzzle.content;
   const totalBlanks = answers.length;
 
@@ -24,6 +26,7 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
   const [showHint, setShowHint] = useState(false);
   const [wrongBlanks, setWrongBlanks] = useState<Set<number>>(new Set());
   const [justPlaced, setJustPlaced] = useState<number | null>(null);
+  const [revealed, setRevealed] = useState(false);
 
   const blankRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,8 +36,13 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
   filledRef.current = filled;
   const lastHoverBlank = useRef<number | null>(null);
 
-  const solved = filled.every((w, i) => w === answers[i]);
+  const solved = filled.every((w, i) => w === answers[i]) || revealed;
   const allFilled = filled.every((w) => w !== null);
+
+  function handleReveal() {
+    setFilled([...answers]);
+    setRevealed(true);
+  }
 
   const shuffledChips = useMemo(() => {
     return [...answers].sort((a, b) => {
@@ -72,10 +80,11 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
     });
     if (wrong.size > 0) {
       setWrongBlanks(wrong);
+      onMistake?.();
       const t = setTimeout(() => setWrongBlanks(new Set()), 1200);
       return () => clearTimeout(t);
     }
-  }, [allFilled, filled, answers, solved]);
+  }, [allFilled, filled, answers, solved, onMistake]);
 
   function getBlankAtPoint(x: number, y: number): number | null {
     for (let i = 0; i < totalBlanks; i++) {
@@ -207,9 +216,20 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
       ref={containerRef}
       style={{ touchAction: isDragging ? "none" : "auto" }}
     >
-      <p className="instruction">Drag each word into its blank</p>
+      <div className="puzzle-header">
+        <Attribution source={puzzle.source} showReadLink={solved} />
+        {!solved && !showHint && !outOfMistakes && (
+          <button className="hint-icon-button" onClick={() => setShowHint(true)} title="Hint">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18h6" /><path d="M10 22h4" />
+              <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
+            </svg>
+          </button>
+        )}
+      </div>
 
       <div className="passage">
+        <p className="instruction">Drag each word into its blank</p>
         <p className="sentence">
           {segments.map((segment, i) => (
             <span key={i}>
@@ -245,6 +265,15 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
             Continue
           </button>
         </div>
+      ) : revealed ? (
+        <div className="feedback revealed">
+          <p className="feedback-message">
+            Here's how it reads. Worth knowing.
+          </p>
+          <button className="next-button" onClick={onComplete}>
+            Continue
+          </button>
+        </div>
       ) : (
         <>
           <div className="word-chips">
@@ -265,11 +294,10 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
           </div>
 
           <div className="hint-area">
-            {showHint ? (
-              <p className="hint-text">{puzzle.hint}</p>
-            ) : (
-              <button className="hint-button" onClick={() => setShowHint(true)}>
-                Hint
+            {showHint && <p className="hint-text">{puzzle.hint}</p>}
+            {outOfMistakes && (
+              <button className="reveal-button" onClick={handleReveal}>
+                Reveal answer
               </button>
             )}
           </div>
@@ -286,8 +314,6 @@ export function FillPuzzle({ puzzle, onComplete }: Props) {
           zIndex: 1000,
         }}
       />
-
-      <Attribution source={puzzle.source} showReadLink={solved} />
     </div>
   );
 }

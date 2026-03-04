@@ -5,6 +5,8 @@ import { Attribution } from "./Attribution";
 interface Props {
   puzzle: RearrangePuzzleType;
   onComplete: () => void;
+  onMistake?: () => void;
+  outOfMistakes?: boolean;
 }
 
 interface DragInfo {
@@ -15,7 +17,7 @@ interface DragInfo {
   bankIndex?: number;
 }
 
-export function RearrangePuzzle({ puzzle, onComplete }: Props) {
+export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Props) {
   const { lines, movable_indices } = puzzle.content;
   const totalSlots = movable_indices.length;
 
@@ -42,6 +44,7 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
   const [showHint, setShowHint] = useState(false);
   const [wrongSlots, setWrongSlots] = useState<Set<number>>(new Set());
   const [justPlaced, setJustPlaced] = useState<number | null>(null);
+  const [revealed, setRevealed] = useState(false);
 
   const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,8 +54,13 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
   filledRef.current = filled;
   const lastHoverSlot = useRef<number | null>(null);
 
-  const solved = filled.every((line, i) => line === slotAnswers[i]);
+  const solved = filled.every((line, i) => line === slotAnswers[i]) || revealed;
   const allFilled = filled.every((line) => line !== null);
+
+  function handleReveal() {
+    setFilled([...slotAnswers]);
+    setRevealed(true);
+  }
 
   // Check which bank cards are used
   function isBankUsed(bankIndex: number): boolean {
@@ -81,10 +89,11 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
     });
     if (wrong.size > 0) {
       setWrongSlots(wrong);
+      onMistake?.();
       const t = setTimeout(() => setWrongSlots(new Set()), 1200);
       return () => clearTimeout(t);
     }
-  }, [allFilled, filled, slotAnswers, solved]);
+  }, [allFilled, filled, slotAnswers, solved, onMistake]);
 
   // Hit-test which slot the pointer is over
   function getSlotAtPoint(x: number, y: number): number | null {
@@ -217,9 +226,20 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
 
   return (
     <div className="rearrange-puzzle" ref={containerRef}>
-      <p className="instruction">Drag each line into its place</p>
+      <div className="puzzle-header">
+        <Attribution source={puzzle.source} showReadLink={solved} />
+        {!solved && !showHint && !outOfMistakes && (
+          <button className="hint-icon-button" onClick={() => setShowHint(true)} title="Hint">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18h6" /><path d="M10 22h4" />
+              <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
+            </svg>
+          </button>
+        )}
+      </div>
 
       <div className="rearrange-passage">
+        <p className="instruction">Drag each line into its place</p>
         {lines.map((line, lineIndex) => {
           if (movableSet.has(lineIndex)) {
             const slotIdx = slotCounter++;
@@ -259,7 +279,7 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
       {solved ? (
         <div className="feedback correct">
           <p className="feedback-message">
-            The argument flows. You read like an editor.
+            {revealed ? "Here's how the passage reads. Worth knowing." : "The argument flows. You read like an editor."}
           </p>
           <button className="next-button" onClick={onComplete}>
             Continue
@@ -285,11 +305,10 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
           </div>
 
           <div className="hint-area">
-            {showHint ? (
-              <p className="hint-text">{puzzle.hint}</p>
-            ) : (
-              <button className="hint-button" onClick={() => setShowHint(true)}>
-                Hint
+            {showHint && <p className="hint-text">{puzzle.hint}</p>}
+            {outOfMistakes && (
+              <button className="reveal-button" onClick={handleReveal}>
+                Reveal answer
               </button>
             )}
           </div>
@@ -307,8 +326,6 @@ export function RearrangePuzzle({ puzzle, onComplete }: Props) {
           zIndex: 1000,
         }}
       />
-
-      <Attribution source={puzzle.source} showReadLink={solved} />
     </div>
   );
 }
