@@ -216,6 +216,7 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
                   revealed ? "rearrange-slot-solved" : "",
                   solved ? "rearrange-slot-correct" : "",
                 ].join(" ")}
+                style={{ touchAction: "none" }}
                 onPointerDown={(e) => {
                   if (!isBeingDragged) startDrag(slotIdx, e);
                 }}
