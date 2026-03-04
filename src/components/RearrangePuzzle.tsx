@@ -191,11 +191,8 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
 
   return (
     <div className="rearrange-puzzle" ref={containerRef}>
-      <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved || revealed} mechanic="Rearrange" />
-      </div>
-
       <div className="rearrange-passage">
+        <p className="mechanic-label">Rearrange</p>
         <p className="instruction">
           {solved || revealed
             ? "The argument flows"
@@ -235,6 +232,8 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
           }
         })}
       </div>
+
+      <Attribution source={puzzle.source} showReadLink={solved || revealed} />
 
       {solved || revealed ? (
         <div className="feedback correct">

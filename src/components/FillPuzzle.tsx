@@ -215,11 +215,8 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
       ref={containerRef}
       style={{ touchAction: isDragging ? "none" : "auto" }}
     >
-      <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} mechanic="Fill" />
-      </div>
-
       <div className="passage">
+        <p className="mechanic-label">Fill</p>
         <p className="instruction">Drag each word into its blank</p>
         <p className="sentence">
           {segments.map((segment, i) => (
@@ -247,6 +244,27 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
         </p>
       </div>
 
+      {!solved && !revealed && (
+        <div className="word-chips">
+          {shuffledChips.map((word, i) => {
+            const used = isChipUsed(i);
+            return (
+              <span
+                key={`${word}-${i}`}
+                className={`chip ${used ? "chip-used" : ""}`}
+                onPointerDown={(e) => {
+                  if (!used) startDrag(word, "bank", i, e);
+                }}
+              >
+                {word}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
+      <Attribution source={puzzle.source} showReadLink={solved} />
+
       {solved ? (
         <div className="feedback correct">
           <p className="feedback-message">
@@ -266,32 +284,13 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
           </button>
         </div>
       ) : (
-        <>
-          <div className="word-chips">
-            {shuffledChips.map((word, i) => {
-              const used = isChipUsed(i);
-              return (
-                <span
-                  key={`${word}-${i}`}
-                  className={`chip ${used ? "chip-used" : ""}`}
-                  onPointerDown={(e) => {
-                    if (!used) startDrag(word, "bank", i, e);
-                  }}
-                >
-                  {word}
-                </span>
-              );
-            })}
-          </div>
-
-          <div className="hint-area">
-            {outOfMistakes && (
-              <button className="reveal-button" onClick={handleReveal}>
-                Reveal answer
-              </button>
-            )}
-          </div>
-        </>
+        <div className="hint-area">
+          {outOfMistakes && (
+            <button className="reveal-button" onClick={handleReveal}>
+              Reveal answer
+            </button>
+          )}
+        </div>
       )}
 
       <div

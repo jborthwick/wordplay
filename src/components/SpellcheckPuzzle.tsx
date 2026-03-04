@@ -111,11 +111,8 @@ export function SpellcheckPuzzle({ puzzle, onComplete, onMistake, outOfMistakes 
 
   return (
     <div className="spellcheck-puzzle">
-      <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} mechanic="Spellcheck" />
-      </div>
-
       <div className="passage">
+        <p className="mechanic-label">Spellcheck</p>
         <p className="instruction">Tap the words that don't belong</p>
         <p className="sentence spellcheck-passage">
           {tokens.map((token, i) => {
@@ -170,6 +167,8 @@ export function SpellcheckPuzzle({ puzzle, onComplete, onMistake, outOfMistakes 
           ? `${errors.length} of ${errors.length} found`
           : `${foundErrors.size} of ${errors.length} found`}
       </div>
+
+      <Attribution source={puzzle.source} showReadLink={solved} />
 
       {solved ? (
         <div className="feedback correct">

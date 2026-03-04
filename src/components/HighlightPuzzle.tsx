@@ -122,11 +122,8 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
 
   return (
     <div className="highlight-puzzle">
-      <div className="puzzle-header">
-        <Attribution source={puzzle.source} showReadLink={solved} mechanic="Highlight" />
-      </div>
-
       <div className="highlight-passage">
+        <p className="mechanic-label">Highlight</p>
         <p className="instruction">
           {revealed ? "Here's what readers highlighted" : "Click and drag to highlight the sentence readers loved most"}
         </p>
@@ -177,6 +174,8 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
           })}
         </div>
       </div>
+
+      <Attribution source={puzzle.source} showReadLink={solved} />
 
       {solved ? (
         <div className="feedback correct">

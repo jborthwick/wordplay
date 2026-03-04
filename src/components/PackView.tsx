@@ -4,6 +4,7 @@ import { FillPuzzle } from "./FillPuzzle";
 import { RearrangePuzzle } from "./RearrangePuzzle";
 import { SpellcheckPuzzle } from "./SpellcheckPuzzle";
 import { HighlightPuzzle } from "./HighlightPuzzle";
+import { Confetti } from "./Confetti";
 import { saveCompletion } from "../data/completion";
 
 interface Props {
@@ -79,6 +80,22 @@ function BookmarkIcon({ filled }: { filled: boolean }) {
 
 function CompletedView({ puzzleCount, mistakes, mistakeWord, flawless, outOfMistakes, editor, editorNote, sources, onRestart }: CompletedViewProps) {
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
+  const [copied, setCopied] = useState(false);
+
+  function handleShare() {
+    const dots = Array.from({ length: MAX_MISTAKES }, (_, i) =>
+      i < MAX_MISTAKES - mistakes ? "●" : "○"
+    ).join("");
+    const text = `Wordplay\n${dots}\n${flawless ? "Flawless!" : `${mistakes} mistake${mistakes === 1 ? "" : "s"}`}`;
+    if (navigator.share) {
+      navigator.share({ text });
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    }
+  }
 
   function toggleBookmark(title: string) {
     setBookmarked((prev) => {
@@ -91,6 +108,7 @@ function CompletedView({ puzzleCount, mistakes, mistakeWord, flawless, outOfMist
 
   return (
     <div className="pack-complete puzzle-enter">
+      <Confetti />
       <h2>Pack complete</h2>
       {flawless ? (
         <p>Flawless. {puzzleCount} puzzles, zero missteps.</p>
@@ -107,6 +125,9 @@ function CompletedView({ puzzleCount, mistakes, mistakeWord, flawless, outOfMist
           />
         ))}
       </div>
+      <button className="share-button" onClick={handleShare}>
+        {copied ? "Copied!" : "Share"}
+      </button>
       <div className="editor-note">
         <p className="editor-note-label">A note from the editor</p>
         <p className="editor-note-body">{editorNote}</p>
@@ -118,16 +139,18 @@ function CompletedView({ puzzleCount, mistakes, mistakeWord, flawless, outOfMist
           {sources.map((s) => (
             <li key={s.title} className="reading-list-item">
               <a href={s.story_url} className="reading-list-link">
-                <span className="reading-list-title">{s.title}</span>
-                <span className="reading-list-author">{s.author}</span>
+                <div className="reading-list-text">
+                  <span className="reading-list-title">{s.title}</span>
+                  <span className="reading-list-author">{s.author}</span>
+                </div>
+                <button
+                  className={`bookmark-button ${bookmarked.has(s.title) ? "bookmark-button-active" : ""}`}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleBookmark(s.title); }}
+                  title={bookmarked.has(s.title) ? "Remove bookmark" : "Bookmark"}
+                >
+                  <BookmarkIcon filled={bookmarked.has(s.title)} />
+                </button>
               </a>
-              <button
-                className={`bookmark-button ${bookmarked.has(s.title) ? "bookmark-button-active" : ""}`}
-                onClick={() => toggleBookmark(s.title)}
-                title={bookmarked.has(s.title) ? "Remove bookmark" : "Bookmark"}
-              >
-                <BookmarkIcon filled={bookmarked.has(s.title)} />
-              </button>
             </li>
           ))}
         </ul>
