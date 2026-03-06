@@ -3,8 +3,7 @@ import type { Pack } from "../types";
 import { getAllCompletions, type PackResult } from "../data/completion";
 
 interface Props {
-  pack: Pack;
-  archive: Pack[];
+  packs: Pack[];
   onPlay: (pack: Pack) => void;
 }
 
@@ -15,13 +14,12 @@ function formatPackDate(dateStr: string): string {
 
 const MAX_MISTAKES = 5;
 
-export function StartScreen({ pack, archive, onPlay }: Props) {
+export function StartScreen({ packs, onPlay }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Build the full list: archive + today
-  const allPacks = [...archive, pack];
-  const todayIndex = allPacks.length - 1;
+  const allPacks = packs;
+  const todayIndex = 0; // First pack is labeled "Today"
 
   const [activeIndex, setActiveIndex] = useState(todayIndex);
   const [completions, setCompletions] = useState<Record<string, PackResult>>({});
@@ -128,7 +126,7 @@ export function StartScreen({ pack, archive, onPlay }: Props) {
                   }
                 }}
               >
-                <span className="pack-card-date">{formatPackDate(p.date)}</span>
+                <span className="pack-card-date">{isToday ? "Today" : formatPackDate(p.date)}</span>
                 <span className="pack-card-title">{p.title}</span>
                 <span className="pack-card-editor">{p.editor}</span>
                 {result ? (

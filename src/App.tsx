@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { Pack } from "./types";
 import { PackView } from "./components/PackView";
 import { StartScreen } from "./components/StartScreen";
-import { dailyPack, packArchive } from "./data/puzzles";
+import { packs } from "./data/puzzles";
 
 export default function App() {
   const [activePack, setActivePack] = useState<Pack | null>(null);
@@ -37,8 +37,7 @@ export default function App() {
           />
         ) : (
           <StartScreen
-            pack={dailyPack}
-            archive={packArchive}
+            packs={packs}
             onPlay={(pack: Pack) => handleTransition(() => setActivePack(pack))}
           />
         )}
