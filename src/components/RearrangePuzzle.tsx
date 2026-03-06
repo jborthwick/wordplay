@@ -198,6 +198,7 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
             ? "The argument flows"
             : "Drag to swap the highlighted lines into the right order"}
         </p>
+        <div className="puzzle-quote">
         {lines.map((line, lineIndex) => {
           if (movableSet.has(lineIndex)) {
             const slotIdx = slotCounter++;
@@ -232,6 +233,7 @@ export function RearrangePuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
             );
           }
         })}
+        </div>
       </div>
 
       <Attribution source={puzzle.source} showReadLink={solved || revealed} />

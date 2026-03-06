@@ -114,6 +114,7 @@ export function SpellcheckPuzzle({ puzzle, onComplete, onMistake, outOfMistakes 
       <div className="passage">
         <p className="mechanic-label">Spellcheck</p>
         <p className="instruction">Tap the words that don't belong</p>
+        <div className="puzzle-quote">
         <p className="sentence spellcheck-passage">
           {tokens.map((token, i) => {
             // Whitespace
@@ -160,6 +161,7 @@ export function SpellcheckPuzzle({ puzzle, onComplete, onMistake, outOfMistakes 
             );
           })}
         </p>
+        </div>
       </div>
 
       <div className="spellcheck-counter">

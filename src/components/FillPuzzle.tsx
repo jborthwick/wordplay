@@ -217,6 +217,7 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
       <div className="passage">
         <p className="mechanic-label">Fill</p>
         <p className="instruction">Drag each word into its blank</p>
+        <div className="puzzle-quote">
         <p className="sentence">
           {segments.map((segment, i) => (
             <span key={i}>
@@ -242,6 +243,7 @@ export function FillPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }: Pro
             </span>
           ))}
         </p>
+        </div>
       </div>
 
       {!solved && !revealed && (

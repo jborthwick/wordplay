@@ -85,7 +85,7 @@ export function HighlightPuzzle({ puzzle, onComplete, onMistake, outOfMistakes }
           {revealed ? "Here's what readers highlighted" : "Tap the sentence readers loved most"}
         </p>
 
-        <div className={`highlight-paragraph ${revealed ? "highlight-paragraph-revealed" : ""}`}>
+        <div className={`puzzle-quote highlight-paragraph ${revealed ? "highlight-paragraph-revealed" : ""}`}>
           {sentences.map((sentence, i) => {
             const isCorrect = i === correct_index;
             const wasPicked = selection !== null && isInSelection(i);

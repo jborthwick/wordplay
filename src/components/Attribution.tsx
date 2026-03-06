@@ -43,9 +43,12 @@ function Title({ source }: { source: PuzzleSource }) {
 export function Attribution({ source, showReadLink }: Props) {
   return (
     <div className="attribution">
-      <Author source={source} />
-      <span className="attribution-sep"> · </span>
-      <Title source={source} />
+      <div className="attribution-title-line">
+        <Title source={source} />
+      </div>
+      <div className="attribution-byline">
+        By <Author source={source} />
+      </div>
       {showReadLink && source.story_url !== "#" && (
         <a
           className="attribution-link"
