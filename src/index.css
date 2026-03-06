@@ -669,15 +669,6 @@ body {
   font-weight: 500;
 }
 
-.spellcheck-word-hint {
-  animation: shimmer 2.2s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
 .spellcheck-word-corrected {
   cursor: default;
 }
