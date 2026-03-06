@@ -26,6 +26,7 @@ Assume you receive a list of Medium articles. Each article should have at least:
 | `title`     | Story title |
 | `author`    | Author display name |
 | `story_url` | Full Medium URL (e.g. `https://medium.com/@username/slug-...`) |
+| `author_url` | (Optional) Author's Medium profile URL (e.g. `https://medium.com/@username` or `https://username.medium.com`). Include when the API provides it so the game can link to the author. |
 | `body` or `content` | Full text or substantial excerpts of the story |
 
 You may get additional fields (e.g. id, publication). Use what you need; the output must include only the fields defined below.
@@ -58,9 +59,10 @@ Every puzzle has a `source` object that must come from one of the input articles
 
 ```ts
 {
-  "title": string,       // Exact story title from Medium
+  "title": string,        // Exact story title from Medium
   "author": string,      // Exact author name from Medium
-  "story_url": string    // Full Medium URL (not "#")
+  "story_url": string,   // Full Medium URL (not "#")
+  "author_url"?: string // Optional. Author's Medium profile URL when available (e.g. https://medium.com/@username)
 }
 ```
 
@@ -190,7 +192,7 @@ Player highlights the sentence they think readers would highlight most. The game
 
 - **difficulty**: Use `"easy"` | `"medium"` | `"hard"` consistently. Medium is the default.
 - **hint**: Nudge *how* to think about the puzzle (tone, structure, what the author is doing). Do **not** give away the answer.
-- **source**: Always use the real Medium `title`, `author`, and `story_url` from the article list. Never use `"#"` for `story_url` when you have a real URL.
+- **source**: Always use the real Medium `title`, `author`, and `story_url` from the article list. Never use `"#"` for `story_url` when you have a real URL. Include `author_url` when the API provides an author/profile URL so the game can link to the author.
 
 ---
 
@@ -230,7 +232,8 @@ Avoid: “Amazing!”, “You’re on fire!”, streaks, urgency, or anything th
       "source": {
         "title": "What My Grandmother Knew About Silence",
         "author": "Jia Lin",
-        "story_url": "https://medium.com/@jialin/what-my-grandmother-knew-about-silence-a1b2c3d4"
+        "story_url": "https://medium.com/@jialin/what-my-grandmother-knew-about-silence-a1b2c3d4",
+        "author_url": "https://medium.com/@jialin"
       },
       "content": {
         "passage": "My grandmother never ______ silence. She inhabited it. Where I saw ______, she found presence.",
@@ -254,6 +257,7 @@ Avoid: “Amazing!”, “You’re on fire!”, streaks, urgency, or anything th
 - [ ] Exactly 6 puzzles: 2 fill, 1 rearrange, 1 spellcheck, 2 highlight.
 - [ ] Every puzzle has `id`, `mechanic`, `source`, `content`, `difficulty`, `hint`.
 - [ ] Every `source` has real `title`, `author`, `story_url` (no `"#"` if you have URLs).
+- [ ] When the API provides an author/profile URL, include it as `author_url` in each puzzle's `source` so the game can link to the author.
 - [ ] Fill: `passage` has one `______` per item in `answers`; `full_passage` is consistent.
 - [ ] Rearrange: `lines` in correct order; `movable_indices` are valid zero-based indices.
 - [ ] Spellcheck: `errors` match strings in `passage_with_errors`; `corrected_passage` is correct.

@@ -2,6 +2,8 @@ export interface PuzzleSource {
   title: string;
   author: string;
   story_url: string;
+  /** Optional. Author's Medium profile URL when available. */
+  author_url?: string;
 }
 
 export interface FillPuzzle {

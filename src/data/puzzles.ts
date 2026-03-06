@@ -27,143 +27,156 @@ const today = new Date();
 const dateSeed =
   today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
 
-// ─── Daily Pack: Women's History, Ongoing ──────────────────
+// ─── Daily Pack: Still Lifting ─────────────────────────────
 
-const womensHistoryOngoingPuzzles: Puzzle[] = [
+const stillLiftingPuzzles: Puzzle[] = [
   {
-    id: "who-fill-01",
+    id: "sl-fill-01",
     mechanic: "fill",
     source: {
       title: "The End of History? Women's History (Her Story) Month",
       author: "Bama Athreya",
       story_url: "https://bamaathreya.medium.com/the-end-of-history-womens-history-her-story-month-69f99a9de6f1",
+      author_url: "https://medium.com/@bamaathreya",
     },
     content: {
       passage:
-        "Why would it make sense to impose a ______ on five decades of evidence, and halt the possibility of gathering new data? I believe it was never about ensuring all boats were lifted. Those in power have never let go of the idea that access to resources is a ______ game.",
-      answers: ["blackout", "zero-sum"],
+        "Why would it make sense to impose a ______ on five decades of evidence, and halt the possibility of gathering new data? I believe it was never about ensuring all boats were ______. Those in power have never let go of the idea that access to resources is a ______ game.",
+      answers: ["blackout", "lifted", "zero-sum"],
       full_passage:
         "Why would it make sense to impose a blackout on five decades of evidence, and halt the possibility of gathering new data? I believe it was never about ensuring all boats were lifted. Those in power have never let go of the idea that access to resources is a zero-sum game.",
     },
     difficulty: "medium",
-    hint: "Think about what happens when evidence disappears—and who benefits from scarcity thinking.",
+    hint: "The author is connecting data erasure to a deeper ideology about scarcity and power. Think about what metaphors she's using.",
   },
   {
-    id: "who-fill-02",
+    id: "sl-fill-02",
     mechanic: "fill",
     source: {
       title: "Why Women's History Month Matters for All Women",
       author: "Vilma G. Reynoso",
       story_url: "https://medium.com/fourth-wave/why-womens-history-month-matters-for-all-women-978090b95f93",
+      author_url: "https://medium.com/@vilmareynoso",
     },
     content: {
       passage:
-        "My mother gave all of herself to everyone to her ______. That is what she was taught to do by my grandmother, by patriarchy. Giving to everyone else but herself is what eventually ______ her, emotionally and physically.",
-      answers: ["detriment", "destroyed"],
+        "She emerges when I least expect it and fills my mind with unrelenting ______ ______.",
+      answers: ["what", "ifs"],
       full_passage:
-        "My mother gave all of herself to everyone to her detriment. That is what she was taught to do by my grandmother, by patriarchy. Giving to everyone else but herself is what eventually destroyed her, emotionally and physically.",
+        "She emerges when I least expect it and fills my mind with unrelenting \"what ifs.\"",
     },
-    difficulty: "medium",
-    hint: "The author is describing a pattern passed down through generations—selflessness as both virtue and trap.",
+    difficulty: "easy",
+    hint: "Grief doesn't arrive on schedule. What kind of thoughts does it bring with it?",
   },
   {
-    id: "who-rearrange-01",
+    id: "sl-rearrange-01",
     mechanic: "rearrange",
     source: {
-      title: "The 2026 Olympics Proved It Again: Sport Has Always Been Political",
-      author: "Dr. Lauren Tucker",
-      story_url: "https://dowhatmatters.medium.com/the-2026-olympics-proved-it-again-sport-has-always-been-political-90cfa8c13bc2",
+      title: "Women's History Month feels more serious than usual. That's a good thing.",
+      author: "The Medium Newsletter",
+      story_url: "https://medium.com/blog/womens-history-month-feels-more-serious-than-usual-that-s-a-good-thing-c993ef1a9193",
+      author_url: "https://medium.com/@dailynewsletter",
     },
     content: {
       lines: [
-        "The women's teams have historically operated with less funding, less media coverage, lower salaries, and lower fan investment.",
-        "They win anyway.",
-        "Relentlessly.",
-        "Professionally.",
-        "Without demanding applause for doing what excellence requires.",
-        "That consistency is political.",
+        "I used to think of Women's History Month as a constant, something I could expect.",
+        "A month dedicated to joyful, albeit sometimes silly, celebrations of dreamy possibility.",
+        "While I miss those cheery days, even if they were overtly cliche at times, I ask myself:",
+        "Would I want it back?",
+        "This new version is less fun, perhaps, but also:",
+        "Isn't it more exacting, more actionable, more intersectional, more… real?",
+        "Maybe so. Maybe it is what we deserve, after all.",
       ],
-      movable_indices: [1, 2, 3, 4],
+      movable_indices: [3, 4, 5],
     },
     difficulty: "medium",
-    hint: "The rhythm matters here. Short declarations build toward a conclusion—notice how the pacing reinforces the point.",
+    hint: "The author is building toward a question she answers herself. Follow the emotional arc from nostalgia to reckoning.",
   },
   {
-    id: "who-spellcheck-01",
+    id: "sl-spellcheck-01",
     mechanic: "spellcheck",
     source: {
       title: "Lessons from My Hackathon on Tackling Violence Against Women and Girls in Public Spaces",
       author: "Jodie Keens",
       story_url: "https://medium.com/@jodiekeens/lessons-from-my-hackathon-on-tackling-violence-against-women-and-girls-in-public-spaces-9008830dc45a",
+      author_url: "https://medium.com/@jodiekeens",
     },
     content: {
       passage_with_errors:
-        "Like so many social issues, VAWG isn't \"too complex\" for product thinking. It's exactley the kind of challange that product, design and technology should be leaning into.",
+        "Like so many social issues, VAWG isn't \"too complex\" for product thinking. It's exactly the kind of challange that product, design and technology should be leening into. I'm more commited than ever to advocating for technology that engages sensitively with social issues.",
       errors: [
-        { wrong: "exactley", correct: "exactly" },
         { wrong: "challange", correct: "challenge" },
+        { wrong: "leening", correct: "leaning" },
+        { wrong: "commited", correct: "committed" },
       ],
       corrected_passage:
-        "Like so many social issues, VAWG isn't \"too complex\" for product thinking. It's exactly the kind of challenge that product, design and technology should be leaning into.",
-    },
-    difficulty: "easy",
-    hint: "Two common spelling stumbles—one near the beginning, one near the end of the second sentence.",
-  },
-  {
-    id: "who-highlight-01",
-    mechanic: "highlight",
-    source: {
-      title: "What We Ignore in Our Debates About Aging Women and Cosmetic 'Enhancement'",
-      author: "Laura Rosell",
-      story_url: "https://medium.com/age-of-empathy/what-we-ignore-in-our-debates-about-aging-women-and-cosmetic-enhancement-9023361a24f1",
-    },
-    content: {
-      sentences: [
-        "I know that growing older is something to feel gratitude for, rather than self-reproach.",
-        "And I know it's impossible to disentangle the \"natural\" consequences of aging—the inevitable loss of bone volume, muscle, or collagen—from the unnatural consequences of structural injustice and patriarchal abuse.",
-        "But I can't escape the fact that, when I look in the mirror, most of the visible \"signs of aging\" that bother me are actually reflections of how patriarchy and poverty have failed me with respect to my wellbeing.",
-      ],
-      correct_index: 2,
-      highlight_density: [0.15, 0.3, 0.55],
+        "Like so many social issues, VAWG isn't \"too complex\" for product thinking. It's exactly the kind of challenge that product, design and technology should be leaning into. I'm more committed than ever to advocating for technology that engages sensitively with social issues.",
     },
     difficulty: "medium",
-    hint: "Look for the sentence that makes the argument concrete and personal—the one that lands.",
+    hint: "Look for common spelling mistakes — doubled letters that aren't, and vowels that shifted.",
   },
   {
-    id: "who-highlight-02",
+    id: "sl-highlight-01",
     mechanic: "highlight",
     source: {
-      title: "Why The Treatment Of Women In Immigration Detention Should Concern Every Woman In America",
-      author: "Maia Niguel Hoskin, Ph.D.",
-      story_url: "https://zora.medium.com/why-the-treatment-of-women-in-immigration-detention-should-concern-every-woman-in-america-5dd77a2f6063",
+      title: "The End of History? Women's History (Her Story) Month",
+      author: "Bama Athreya",
+      story_url: "https://bamaathreya.medium.com/the-end-of-history-womens-history-her-story-month-69f99a9de6f1",
+      author_url: "https://medium.com/@bamaathreya",
     },
     content: {
       sentences: [
-        "According to historians from Harvard University, policies affecting marginalized women have often foreshadowed broader societal shifts.",
-        "When the dignity of vulnerable women is treated as secondary, it raises questions about how secure women's rights truly are.",
-        "The data surrounding immigration detention today—which reflects record numbers, family separations, and documented mental health harm—calls for informed public engagement, some activists say.",
-        "For women across America, this is not a distant border debate.",
+        "Our project this year should be to ensure we have the means to convey our stories and our data to the next generation.",
+        "We can continue to influence and inform public policy when we see openings, but only if we ensure we, and those who follow us, have access to the wealth of evidence we've generated over the past decades.",
+        "Women have always had to resort to many different techniques to share our knowledge — weaving, songs, stories.",
+        "We must continue to document but we also need to take what we already know and find new ways to share it.",
+        "Let his story end.",
+        "Let's commemorate the allies who will work together today and in future to preserve, protect and continue to promote our stories.",
       ],
-      correct_index: 1,
-      highlight_density: [0.18, 0.45, 0.22, 0.15],
+      correct_index: 2,
+      highlight_density: [0.15, 0.12, 0.38, 0.18, 0.07, 0.1],
     },
-    difficulty: "hard",
-    hint: "Which sentence expands the stakes from one group to all women? That's the gravitational center.",
+    difficulty: "medium",
+    hint: "Which sentence captures the longest tradition of resistance? Look for the one that reaches furthest back.",
+  },
+  {
+    id: "sl-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "Why Women's History Month Matters for All Women",
+      author: "Vilma G. Reynoso",
+      story_url: "https://medium.com/fourth-wave/why-womens-history-month-matters-for-all-women-978090b95f93",
+      author_url: "https://medium.com/@vilmareynoso",
+    },
+    content: {
+      sentences: [
+        "My mom was brilliant, the most creative person I have ever known.",
+        "She made her own wedding dress from scratch.",
+        "In Argentina, before she married my father, she designed and sewed hundreds of wedding dresses for other women.",
+        "Well known in her community as a master seamstress, she should be remembered, too.",
+        "She deserves recognition for her contributions to society.",
+        "She did not win a Nobel Peace Prize like Marie Curie, nor sit on the bench like Rosa Parks, nor was she exceptionally famous, but she should be celebrated for her work behind the scenes, nonetheless.",
+      ],
+      correct_index: 5,
+      highlight_density: [0.12, 0.08, 0.14, 0.11, 0.1, 0.45],
+    },
+    difficulty: "easy",
+    hint: "The author is making a case for a different kind of recognition. Which sentence makes that argument most fully?",
   },
 ];
 
 // ─── Daily Pack ───────────────────────────────────────────
 
 export const dailyPack: Pack = {
-  title: "Women's History, Ongoing",
-  editor: "Carly Rose Gillis",
+  title: "Still Lifting",
+  editor: "The Wordplay Team",
   date: localDateStr(new Date()),
-  puzzles: seededShuffle([...womensHistoryOngoingPuzzles], dateSeed),
+  puzzles: seededShuffle([...stillLiftingPuzzles], dateSeed),
   welcome: {
-    body: "This pack draws from writers reflecting on Women's History Month in 2026—a year when the celebration feels less like confetti and more like reckoning. These are essays about mothers and memory, data and erasure, sport and power, and the quiet labor of existing safely in public space.",
-    body2: "The puzzles ask you to slow down with sentences that carry weight. Notice what the writers are doing with language—and what they're fighting for underneath it.",
+    body: "This pack is about women's stories — the ones we tell, the ones we fight to keep, and the ones that persist even when someone tries to erase them. These puzzles draw from writers reflecting on Women's History Month in a year that feels heavier than most.",
+    body2: "The words here carry weight. Some mourn what's been lost; others insist on what remains. Pay attention to who's speaking and what they refuse to let go of.",
   },
-  editorNote: "I built this pack around stories that made me sit with discomfort and leave with clarity. Women's History Month has always been political—these writers remind us it was never meant to be comfortable.",
+  editorNote: "I built this pack around the idea that history isn't handed down — it's held onto. Every writer here is holding something: evidence, memory, hope, or a question that won't stop asking itself. I hope you leave with one of your own.",
 };
 
 // ─── Archive Pack 1: Small Truths ─────────────────────────
