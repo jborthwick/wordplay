@@ -286,28 +286,143 @@ const dailyHighlights: HighlightPuzzle[] = [
   },
 ];
 
+// ─── Daily Pack: Women's History, Ongoing ──────────────────
+
+const womensHistoryOngoingPuzzles: Puzzle[] = [
+  {
+    id: "who-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "The End of History? Women's History (Her Story) Month",
+      author: "Bama Athreya",
+      story_url: "https://bamaathreya.medium.com/the-end-of-history-womens-history-her-story-month-69f99a9de6f1",
+    },
+    content: {
+      passage:
+        "Why would it make sense to impose a ______ on five decades of evidence, and halt the possibility of gathering new data? I believe it was never about ensuring all boats were lifted. Those in power have never let go of the idea that access to resources is a ______ game.",
+      answers: ["blackout", "zero-sum"],
+      full_passage:
+        "Why would it make sense to impose a blackout on five decades of evidence, and halt the possibility of gathering new data? I believe it was never about ensuring all boats were lifted. Those in power have never let go of the idea that access to resources is a zero-sum game.",
+    },
+    difficulty: "medium",
+    hint: "Think about what happens when evidence disappears—and who benefits from scarcity thinking.",
+  },
+  {
+    id: "who-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "Why Women's History Month Matters for All Women",
+      author: "Vilma G. Reynoso",
+      story_url: "https://medium.com/fourth-wave/why-womens-history-month-matters-for-all-women-978090b95f93",
+    },
+    content: {
+      passage:
+        "My mother gave all of herself to everyone to her ______. That is what she was taught to do by my grandmother, by patriarchy. Giving to everyone else but herself is what eventually ______ her, emotionally and physically.",
+      answers: ["detriment", "destroyed"],
+      full_passage:
+        "My mother gave all of herself to everyone to her detriment. That is what she was taught to do by my grandmother, by patriarchy. Giving to everyone else but herself is what eventually destroyed her, emotionally and physically.",
+    },
+    difficulty: "medium",
+    hint: "The author is describing a pattern passed down through generations—selflessness as both virtue and trap.",
+  },
+  {
+    id: "who-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "The 2026 Olympics Proved It Again: Sport Has Always Been Political",
+      author: "Dr. Lauren Tucker",
+      story_url: "https://dowhatmatters.medium.com/the-2026-olympics-proved-it-again-sport-has-always-been-political-90cfa8c13bc2",
+    },
+    content: {
+      lines: [
+        "The women's teams have historically operated with less funding, less media coverage, lower salaries, and lower fan investment.",
+        "They win anyway.",
+        "Relentlessly.",
+        "Professionally.",
+        "Without demanding applause for doing what excellence requires.",
+        "That consistency is political.",
+      ],
+      movable_indices: [1, 2, 3, 4],
+    },
+    difficulty: "medium",
+    hint: "The rhythm matters here. Short declarations build toward a conclusion—notice how the pacing reinforces the point.",
+  },
+  {
+    id: "who-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "Lessons from My Hackathon on Tackling Violence Against Women and Girls in Public Spaces",
+      author: "Jodie Keens",
+      story_url: "https://medium.com/@jodiekeens/lessons-from-my-hackathon-on-tackling-violence-against-women-and-girls-in-public-spaces-9008830dc45a",
+    },
+    content: {
+      passage_with_errors:
+        "Like so many social issues, VAWG isn't \"too complex\" for product thinking. It's exactley the kind of challange that product, design and technology should be leaning into.",
+      errors: [
+        { wrong: "exactley", correct: "exactly" },
+        { wrong: "challange", correct: "challenge" },
+      ],
+      corrected_passage:
+        "Like so many social issues, VAWG isn't \"too complex\" for product thinking. It's exactly the kind of challenge that product, design and technology should be leaning into.",
+    },
+    difficulty: "easy",
+    hint: "Two common spelling stumbles—one near the beginning, one near the end of the second sentence.",
+  },
+  {
+    id: "who-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "What We Ignore in Our Debates About Aging Women and Cosmetic 'Enhancement'",
+      author: "Laura Rosell",
+      story_url: "https://medium.com/age-of-empathy/what-we-ignore-in-our-debates-about-aging-women-and-cosmetic-enhancement-9023361a24f1",
+    },
+    content: {
+      sentences: [
+        "I know that growing older is something to feel gratitude for, rather than self-reproach.",
+        "And I know it's impossible to disentangle the \"natural\" consequences of aging—the inevitable loss of bone volume, muscle, or collagen—from the unnatural consequences of structural injustice and patriarchal abuse.",
+        "But I can't escape the fact that, when I look in the mirror, most of the visible \"signs of aging\" that bother me are actually reflections of how patriarchy and poverty have failed me with respect to my wellbeing.",
+      ],
+      correct_index: 2,
+      highlight_density: [0.15, 0.3, 0.55],
+    },
+    difficulty: "medium",
+    hint: "Look for the sentence that makes the argument concrete and personal—the one that lands.",
+  },
+  {
+    id: "who-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "Why The Treatment Of Women In Immigration Detention Should Concern Every Woman In America",
+      author: "Maia Niguel Hoskin, Ph.D.",
+      story_url: "https://zora.medium.com/why-the-treatment-of-women-in-immigration-detention-should-concern-every-woman-in-america-5dd77a2f6063",
+    },
+    content: {
+      sentences: [
+        "According to historians from Harvard University, policies affecting marginalized women have often foreshadowed broader societal shifts.",
+        "When the dignity of vulnerable women is treated as secondary, it raises questions about how secure women's rights truly are.",
+        "The data surrounding immigration detention today—which reflects record numbers, family separations, and documented mental health harm—calls for informed public engagement, some activists say.",
+        "For women across America, this is not a distant border debate.",
+      ],
+      correct_index: 1,
+      highlight_density: [0.18, 0.45, 0.22, 0.15],
+    },
+    difficulty: "hard",
+    hint: "Which sentence expands the stakes from one group to all women? That's the gravitational center.",
+  },
+];
+
 // ─── Daily Pack ───────────────────────────────────────────
 
 export const dailyPack: Pack = {
-  title: "The Weight of Words",
-  editor: "The Wordplay Team",
+  title: "Women's History, Ongoing",
+  editor: "Carly Rose Gillis",
   date: localDateStr(new Date()),
-  puzzles: seededShuffle(
-    [
-      fillPuzzles[0],
-      rearrangePuzzles[0],
-      spellcheckPuzzles[0],
-      dailyHighlights[0],
-      fillPuzzles[1],
-      dailyHighlights[1],
-    ],
-    dateSeed
-  ),
+  puzzles: seededShuffle([...womensHistoryOngoingPuzzles], dateSeed),
   welcome: {
-    body: "Words carry more weight than we give them credit for. Today's writers chose each one deliberately — and the puzzles ask you to feel that deliberateness.",
-    body2: "Drag words into place, rearrange scattered lines, and discover passages you might want to read in full when you're done.",
+    body: "This pack draws from writers reflecting on Women's History Month in 2026—a year when the celebration feels less like confetti and more like reckoning. These are essays about mothers and memory, data and erasure, sport and power, and the quiet labor of existing safely in public space.",
+    body2: "The puzzles ask you to slow down with sentences that carry weight. Notice what the writers are doing with language—and what they're fighting for underneath it.",
   },
-  editorNote: "Today's pack was built around the idea that clarity is a practice, not a gift. The writers featured here all found something true by slowing down. We hope the puzzles gave you a reason to do the same.",
+  editorNote: "I built this pack around stories that made me sit with discomfort and leave with clarity. Women's History Month has always been political—these writers remind us it was never meant to be comfortable.",
 };
 
 // ─── Archive Pack 1: Small Truths ─────────────────────────
