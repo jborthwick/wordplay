@@ -2,11 +2,11 @@
 
 ## What Is Wordplay?
 
-A daily browser-based word puzzle game built on Medium's catalog of ideas. Players engage with sentences, structures, and ideas from essays — filling blanks, rearranging arguments, catching errors, and highlighting the lines that matter most. Each daily pack is a small, curated reading experience that leaves you with a thought that sticks.
+A browser-based word puzzle game built on Medium's catalog of ideas. Players engage with sentences, structures, and ideas from essays — filling blanks, rearranging arguments, catching errors, and highlighting the lines that matter most. Each pack is a small, curated reading experience that leaves you with a thought that sticks.
 
 ## Stack
 
-React + TypeScript + Vite. No backend. Puzzle data lives in `src/data/puzzles.ts` as typed objects. Types in `src/types.ts`. Completion state in localStorage (`src/data/completion.ts`).
+React + TypeScript + Vite. No backend. Puzzle data lives in `src/data/puzzles/` (one file per pack). Types in `src/types.ts`. Completion state in localStorage (`src/data/completion.ts`).
 
 ## Design Principles
 
@@ -21,7 +21,7 @@ React + TypeScript + Vite. No backend. Puzzle data lives in `src/data/puzzles.ts
 ## Puzzle Mechanics
 
 ### Fill
-A passage with blanks. Drag the correct word from a bank of plausible options. Remove the most *characterful* word — the one that reveals the author's sensibility. Distractors must be same part of speech, similar register, semantically adjacent.
+A passage with blanks. Drag the correct word from the bank (answer words only in current build). Remove the most *characterful* word — the one that reveals the author's sensibility.
 
 ### Rearrange
 A passage with some lines out of order. All movable slots are pre-filled with shuffled lines — drag to swap slots until the argument flows. "Lock In" checks answers; wrong slots shake and unlock for another try. Works best with essays that have a clear argumentative or narrative arc.
@@ -34,7 +34,51 @@ Wordplay's original mechanic, inspired by Medium's highlight feature. A passage 
 
 ## Pack Composition
 
-Each pack contains exactly **6 puzzles**: 2 fills · 1 rearrange · 1 spellcheck · 2 highlights. Order is randomized each session in `PackView`. The daily pack uses a date-seeded shuffle in `puzzles.ts`; archive packs shuffle on mount.
+Each pack contains exactly **6 puzzles**: 2 fills · 1 rearrange · 1 spellcheck · 2 highlights. At runtime, puzzle order within each pack is shuffled deterministically using the pack's `date` as seed (see `src/data/puzzles/helpers.ts`). There is no separate "daily" vs "archive" — all packs are the same. Packs are sorted by `date` (newest first); the **newest pack** is labeled "Today" on the start screen menu.
+
+## Puzzle Data Structure
+
+Packs live in **`src/data/puzzles/`**. Each pack is its own file; the app exports a single list from `index.ts`.
+
+### Directory layout
+
+- **`helpers.ts`** — `seedFromDate(dateStr)`, `seededShuffle(arr, seed)`. Used by `index.ts` to shuffle puzzle order per pack.
+- **`index.ts`** — Imports all pack modules, collects them in `rawPacks`, then sorts by `date` (newest first) and applies per-pack puzzle shuffle to produce `packs`. **Add new packs to `rawPacks` here** (order in the array doesn't matter).
+- **One file per pack** — e.g. `stillLifting.ts`, `whatWeOwe.ts`, `newThreshold.ts`. Each exports a single `Pack` object.
+
+### Pack shape (from `src/types.ts`)
+
+Every pack must have:
+
+- **`title`** — Pack theme (e.g. "Still Lifting", "What We Owe").
+- **`editor`** — Credit (e.g. "The Wordplay Team").
+- **`date`** — Explicit date string `YYYY-MM-DD` (e.g. `"2026-03-06"`). Used for the menu label and as the completion key in localStorage.
+- **`welcome`** — `{ body: string, body2: string }` for the intro screen.
+- **`editorNote`** — Short outro after the player finishes the pack.
+- **`puzzles`** — Array of exactly 6 puzzles (see types: `FillPuzzle`, `RearrangePuzzle`, `SpellcheckPuzzle`, `HighlightPuzzle`). Each puzzle has `id`, `mechanic`, `source` (title, author, story_url, optional author_url), `content` (mechanic-specific), `difficulty`, `hint`.
+
+### Adding a new pack
+
+1. **Create a new file** in `src/data/puzzles/`, e.g. `myPack.ts`.
+2. **Import** `Pack` and `Puzzle` from `"../../types"`.
+3. **Define** the puzzles array (use a slug for ids, e.g. `mp-fill-01`, `mp-rearrange-01`, …).
+4. **Export** a `Pack` object with `title`, `editor`, `date` (explicit `"YYYY-MM-DD"`), `welcome`, `editorNote`, and `puzzles`.
+5. **Register the pack** in `src/data/puzzles/index.ts`: add the import and append the pack to the `rawPacks` array. Order in `rawPacks` doesn't matter — packs are sorted by `date` at runtime, and the newest is shown as "Today".
+
+Example export from a pack file:
+
+```ts
+export const myPack: Pack = {
+  title: "My Pack",
+  editor: "The Wordplay Team",
+  date: "2026-03-10",
+  puzzles: myPackPuzzles,
+  welcome: { body: "...", body2: "..." },
+  editorNote: "...",
+};
+```
+
+For full puzzle shapes and content rules, see `docs/WORDPLAY_PACK_SPEC.md` (used by the Medium AI tool to generate packs).
 
 ## Writing Puzzle Content
 
@@ -67,7 +111,7 @@ GitHub Pages via `.github/workflows/deploy.yml`. Pushes to `main` auto-deploy. V
 ## Out of Scope (current)
 
 - User accounts or authentication
-- Real Medium stories (use mock stories for now)
+- Medium API or live fetching (packs are static data; `story_url` and `author_url` point to real articles)
 - Native mobile app
 - Monetization / paywalls
 
