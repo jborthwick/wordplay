@@ -34,7 +34,7 @@ Wordplay's original mechanic, inspired by Medium's highlight feature. A passage 
 
 ## Pack Composition
 
-Each pack contains exactly **6 puzzles**: 2 fills · 1 rearrange · 1 spellcheck · 2 highlights. At runtime, puzzle order within each pack is shuffled deterministically using the pack's `date` as seed (see `src/data/puzzles/helpers.ts`). There is no separate "daily" vs "archive" — all packs are the same. Packs are sorted by `date` (newest first); the **newest pack** is labeled "Today" on the start screen menu.
+Each pack contains exactly **6 puzzles**: 2 fills · 1 rearrange · 1 spellcheck · 2 highlights. Puzzle order within each pack is as defined in the pack data. There is no separate "daily" vs "archive" — all packs are the same. Packs are sorted by `date` (newest first); the **newest pack** is labeled "Today" on the start screen menu.
 
 ## Puzzle Data Structure
 
@@ -42,8 +42,7 @@ Packs live in **`src/data/puzzles/`**. Each pack is its own file; the app export
 
 ### Directory layout
 
-- **`helpers.ts`** — `seedFromDate(dateStr)`, `seededShuffle(arr, seed)`. Used by `index.ts` to shuffle puzzle order per pack.
-- **`index.ts`** — Imports all pack modules, collects them in `rawPacks`, then sorts by `date` (newest first) and applies per-pack puzzle shuffle to produce `packs`. **Add new packs to `rawPacks` here** (order in the array doesn't matter).
+- **`index.ts`** — Imports all pack modules, collects them in `rawPacks`, then sorts by `date` (newest first) to produce `packs`. **Add new packs to `rawPacks` here** (order in the array doesn't matter).
 - **One file per pack** — e.g. `stillLifting.ts`, `whatWeOwe.ts`, `newThreshold.ts`. Each exports a single `Pack` object.
 
 ### Pack shape (from `src/types.ts`)
