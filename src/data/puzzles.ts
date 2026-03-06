@@ -179,867 +179,302 @@ export const dailyPack: Pack = {
   editorNote: "I built this pack around the idea that history isn't handed down — it's held onto. Every writer here is holding something: evidence, memory, hope, or a question that won't stop asking itself. I hope you leave with one of your own.",
 };
 
-// ─── Archive Pack 1: Small Truths ─────────────────────────
+// ─── Archive Pack: What We Owe ─────────────────────────────
 
-const smallTruthsPuzzles: Puzzle[] = [
+const whatWeOwePuzzles: Puzzle[] = [
   {
-    id: "st-fill-01",
+    id: "wwo-fill-01",
     mechanic: "fill",
     source: {
-      title: "What My Grandmother Knew About Silence",
-      author: "Jia Lin",
-      story_url: "#",
+      title: "The Anti-Empathy Movement & the End of the Iliad",
+      author: "Maximus Planudes",
+      story_url: "https://planudes.medium.com/the-anti-empathy-movement-the-end-of-the-iliad-d77470865a8c",
+      author_url: "https://medium.com/@planudes",
     },
     content: {
       passage:
-        "My grandmother never ______ silence. She inhabited it. Where I saw ______, she found presence — the kind that doesn't need to ______ itself.",
-      answers: ["explained", "absence", "prove"],
+        "The capacity to recognize another person's suffering as real, as mattering, as somehow connected to one's own ______ — that capacity is what Homer chose to place at his epic's conclusion. Not the triumph of arms or the fall of cities, but two men ______ together over the inescapable sorrow of being ______.",
+      answers: ["vulnerability", "weeping", "mortal"],
       full_passage:
-        "My grandmother never explained silence. She inhabited it. Where I saw absence, she found presence — the kind that doesn't need to prove itself.",
+        "The capacity to recognize another person's suffering as real, as mattering, as somehow connected to one's own vulnerability — that capacity is what Homer chose to place at his epic's conclusion. Not the triumph of arms or the fall of cities, but two men weeping together over the inescapable sorrow of being mortal.",
     },
     difficulty: "medium",
-    hint: "The contrast is between analyzing and living. Between emptiness and fullness.",
+    hint: "The author is describing what Achilles and Priam share. Think about what connects enemies at the deepest level.",
   },
   {
-    id: "st-fill-02",
+    id: "wwo-fill-02",
     mechanic: "fill",
     source: {
-      title: "The Art of Noticing",
-      author: "Thomas Reid",
-      story_url: "#",
+      title: "When Being Right Costs You the Relationship: Rethinking Feedback",
+      author: "Malynnda Stewart, PhD, BCPA",
+      story_url: "https://medium.com/@malynnda.stewart/when-being-right-costs-you-the-relationship-rethinking-feedback-14d39b10fba9",
+      author_url: "https://medium.com/@malynnda.stewart",
     },
     content: {
       passage:
-        "Most people walk past the same ______ every day without seeing them. Not because they're ______, but because attention is a ______ most of us never learned.",
-      answers: ["details", "careless", "skill"],
+        "I chose ______ over connected. Repeatedly. Until there was nothing left to be ______ about.",
+      answers: ["right", "right"],
       full_passage:
-        "Most people walk past the same details every day without seeing them. Not because they're careless, but because attention is a skill most of us never learned.",
+        "I chose right over connected. Repeatedly. Until there was nothing left to be right about.",
     },
     difficulty: "easy",
-    hint: "The author isn't blaming anyone. They're pointing to something trainable.",
+    hint: "The author is reflecting on a pattern that cost her a relationship. What was she prioritizing?",
   },
   {
-    id: "st-rearrange-01",
+    id: "wwo-rearrange-01",
     mechanic: "rearrange",
     source: {
-      title: "The Art of Noticing",
-      author: "Thomas Reid",
-      story_url: "#",
+      title: "Einstein the \"lone genius\" is a complete myth",
+      author: "Ethan Siegel",
+      story_url: "https://medium.com/starts-with-a-bang/einstein-the-lone-genius-is-a-complete-myth-dd76cfabbf35",
+      author_url: "https://medium.com/@startswithabang",
     },
     content: {
       lines: [
-        "I started keeping a notebook of things I noticed.",
-        "Not important things. Ordinary ones.",
-        "The way light hit the kitchen counter at 4 p.m.",
-        "The particular silence after a bus pulls away.",
-        "Within a month, the world looked different.",
-        "Nothing had changed except the quality of my attention.",
+        "It was precisely because Einstein had the education and background that he did — his own unique toolkit, as it were — that he was able to approach this variety of problems in a self-consistent, non-contradictory way.",
+        "It was because of his friends and collaborators that he was exposed to ideas that helped him to progress, rather than stagnate.",
+        "And it was because of his willingness and even eagerness to rely on the input and expertise of others, and to take inspiration from them and incorporate it into his own work,",
+        "that his excellent ideas, many of which were profound but that began as mere seeds,",
+        "were able to sprout into the towering achievements we still acknowledge today.",
       ],
-      movable_indices: [1, 3, 4],
+      movable_indices: [1, 2, 3],
     },
     difficulty: "medium",
-    hint: "The notebook comes first. Then examples. Then the result.",
+    hint: "The author is building an argument about what made Einstein successful. Follow the logical progression from education to collaboration to outcome.",
   },
   {
-    id: "st-spellcheck-01",
+    id: "wwo-spellcheck-01",
     mechanic: "spellcheck",
     source: {
-      title: "What My Grandmother Knew About Silence",
-      author: "Jia Lin",
-      story_url: "#",
+      title: "The Anti-Empathy Movement & the End of the Iliad",
+      author: "Maximus Planudes",
+      story_url: "https://planudes.medium.com/the-anti-empathy-movement-the-end-of-the-iliad-d77470865a8c",
+      author_url: "https://medium.com/@planudes",
     },
     content: {
       passage_with_errors:
-        "She never offered advise unless you asked for it, and even then she chose her words with a care that made you feel like each one costed her something. That economy of speech wasn't shyness. It was respect.",
+        "The conservitive Christian anti-empathy movement seems to be working only with a simplistic idea of affective empathy. They do not engage with the rich tradition of cognitive empathy or the ways of transforming affective empathy into sustainible compassion. They're not offering contemplitive practices for working with difficult emotions; they're refusing to feel others' pain altogether.",
       errors: [
-        { wrong: "advise", correct: "advice" },
-        { wrong: "costed", correct: "cost" },
+        { wrong: "conservitive", correct: "conservative" },
+        { wrong: "sustainible", correct: "sustainable" },
+        { wrong: "contemplitive", correct: "contemplative" },
       ],
       corrected_passage:
-        "She never offered advice unless you asked for it, and even then she chose her words with a care that made you feel like each one cost her something. That economy of speech wasn't shyness. It was respect.",
+        "The conservative Christian anti-empathy movement seems to be working only with a simplistic idea of affective empathy. They do not engage with the rich tradition of cognitive empathy or the ways of transforming affective empathy into sustainable compassion. They're not offering contemplative practices for working with difficult emotions; they're refusing to feel others' pain altogether.",
     },
     difficulty: "medium",
-    hint: "One is a verb used as a noun. The other is an irregular past tense.",
+    hint: "Look for words with similar vowel patterns — some have been subtly shifted.",
   },
   {
-    id: "st-highlight-01",
+    id: "wwo-highlight-01",
     mechanic: "highlight",
     source: {
-      title: "What My Grandmother Knew About Silence",
-      author: "Jia Lin",
-      story_url: "#",
+      title: "The Anti-Empathy Movement & the End of the Iliad",
+      author: "Maximus Planudes",
+      story_url: "https://planudes.medium.com/the-anti-empathy-movement-the-end-of-the-iliad-d77470865a8c",
+      author_url: "https://medium.com/@planudes",
     },
     content: {
       sentences: [
-        "My grandmother rarely spoke at family dinners.",
-        "She'd sit at the end of the table, hands folded, watching us argue about nothing.",
-        "I used to think she had nothing to say.",
-        "Now I think she had everything to say, and chose not to.",
-        "Silence, in her hands, wasn't absence. It was precision.",
-        "She said more by listening than the rest of us managed in hours of talking.",
+        "For Rigney and company, empathy threatens the self, it dissolves boundaries, confuses morals, capitulates to evil.",
+        "The self must be defended against contamination by others' suffering.",
+        "For Homer, the capacity to recognize another's suffering constitutes the self.",
+        "Achilles becomes fully human precisely through recovering his αἰδώς toward Priam, which means recovering it toward himself, and finding solidarity in ἔλεος for universal human suffering.",
+        "The anti-empathy movement would read Achilles' transformation as capitulation, as letting Priam's emotional manipulation override truth and justice.",
+        "Homer reads it as the only path to recovering one's human self.",
       ],
-      correct_index: 4,
-      highlight_density: [0.04, 0.08, 0.10, 0.18, 0.43, 0.17],
+      correct_index: 2,
+      highlight_density: [0.12, 0.08, 0.42, 0.18, 0.1, 0.1],
     },
     difficulty: "medium",
-    hint: "Look for the sentence that redefines silence — where it stops being a lack and becomes something else.",
+    hint: "The author is contrasting two views of the self. Which sentence captures Homer's radical inversion most directly?",
   },
   {
-    id: "st-highlight-02",
+    id: "wwo-highlight-02",
     mechanic: "highlight",
     source: {
-      title: "The Art of Noticing",
-      author: "Thomas Reid",
-      story_url: "#",
+      title: "When Being Right Costs You the Relationship: Rethinking Feedback",
+      author: "Malynnda Stewart, PhD, BCPA",
+      story_url: "https://medium.com/@malynnda.stewart/when-being-right-costs-you-the-relationship-rethinking-feedback-14d39b10fba9",
+      author_url: "https://medium.com/@malynnda.stewart",
     },
     content: {
       sentences: [
-        "I started keeping a notebook of things I noticed.",
-        "Not important things — ordinary ones.",
-        "The way light hit the kitchen counter at four in the afternoon.",
-        "The particular silence after a bus pulls away.",
-        "Within a month, the world looked different.",
-        "Nothing had changed except the quality of my attention.",
+        "She listened.",
+        "And then she asked a question that stopped me cold: \"Do you want to be right, or do you want to be connected?\"",
+        "I sat there, silent.",
+        "Because the honest answer was: I wanted both.",
+        "Of course, I wanted both.",
+        "Why couldn't I have both?",
       ],
-      correct_index: 5,
-      highlight_density: [0.06, 0.05, 0.14, 0.12, 0.20, 0.43],
+      correct_index: 1,
+      highlight_density: [0.05, 0.48, 0.08, 0.15, 0.12, 0.12],
     },
-    difficulty: "medium",
-    hint: "Readers gravitate toward the sentence that names the transformation — not the examples, but the explanation.",
+    difficulty: "easy",
+    hint: "One sentence contains the question that changed everything for the author. Which one carries the most weight?",
   },
 ];
 
-const smallTruths: Pack = {
-  title: "Small Truths",
-  editor: "Mia Tan",
+const whatWeOwe: Pack = {
+  title: "What We Owe",
+  editor: "The Wordplay Team",
+  date: daysAgo(7),
+  puzzles: whatWeOwePuzzles,
+  welcome: {
+    body: "This pack is about connection — the kind we cultivate, the kind we deny, and the kind that makes any real achievement possible. These puzzles draw from writers thinking about empathy: what the ancients called it, why some want to abolish it, and what we lose when we choose being right over being close.",
+    body2: "The words here ask you to sit with discomfort. To consider enemies weeping together, geniuses who needed friends, and the quiet cost of winning every argument.",
+  },
+  editorNote: "I built this pack around a question that kept surfacing in these pieces: What happens when we stop recognizing each other's suffering? The answers weren't comfortable, but they felt true. I hope you leave with the question still turning.",
+};
+
+// ─── Archive Pack: The New Threshold ───────────────────────
+
+const newThresholdPuzzles: Puzzle[] = [
+  {
+    id: "tnt-fill-01",
+    mechanic: "fill",
+    source: {
+      title: "26 Rules to Be a Better Thinker in 2026",
+      author: "Ryan Holiday",
+      story_url: "https://ryanholiday.medium.com/26-rules-to-be-a-better-thinker-in-2026-6393399aad3d",
+      author_url: "https://medium.com/@ryanholiday",
+    },
+    content: {
+      passage:
+        "People are talking about what AI is going to replace, that it's the sum total of all human knowledge, that it's going to make ______ obsolete. And it's true it will do a lot and it is unbelievably powerful, but in many ways it makes ______ even more important.",
+      answers: ["expertise", "thinking"],
+      full_passage:
+        "People are talking about what AI is going to replace, that it's the sum total of all human knowledge, that it's going to make expertise obsolete. And it's true it will do a lot and it is unbelievably powerful, but in many ways it makes thinking even more important.",
+    },
+    difficulty: "easy",
+    hint: "The author is setting up a paradox. What does everyone fear AI will eliminate — and what does it actually demand more of?",
+  },
+  {
+    id: "tnt-fill-02",
+    mechanic: "fill",
+    source: {
+      title: "26 Rules to Be a Better Thinker in 2026",
+      author: "Ryan Holiday",
+      story_url: "https://ryanholiday.medium.com/26-rules-to-be-a-better-thinker-in-2026-6393399aad3d",
+      author_url: "https://medium.com/@ryanholiday",
+    },
+    content: {
+      passage:
+        "The irony of AI, this cutting-edge technology, is that it makes the ______ more valuable than ever. It makes ______ even more important. Reading. Knowing things. Having taste. Understanding context. Detecting lies or nonsense.",
+      answers: ["humanities", "brainpower"],
+      full_passage:
+        "The irony of AI, this cutting-edge technology, is that it makes the humanities more valuable than ever. It makes brainpower even more important. Reading. Knowing things. Having taste. Understanding context. Detecting lies or nonsense.",
+    },
+    difficulty: "medium",
+    hint: "The author is naming the unexpected beneficiaries of the AI age. Think about the disciplines everyone assumed would be first to go.",
+  },
+  {
+    id: "tnt-rearrange-01",
+    mechanic: "rearrange",
+    source: {
+      title: "Will Humans Still Review Code?",
+      author: "Francisco Trindade",
+      story_url: "https://franciscomt.medium.com/will-humans-still-review-code-a6f7d3f0c39c",
+      author_url: "https://medium.com/@franciscomt",
+    },
+    content: {
+      lines: [
+        "While having an engineer write code surely takes time, it is only one part of the value delivery chain that starts with an idea and culminates in a feature in production.",
+        "Even if you focus on the engineering aspects of it, when you look at most enterprise companies, you will find that engineering work is usually stuck in reviews, deployment, testing, and different levels of rework.",
+        "Writing code is one of many steps in delivering value with software.",
+        "There is no way to examine the current state of the industry without recognizing that the bottleneck lies elsewhere.",
+        "What is new is how AI-assisted development made this situation extremely obvious.",
+      ],
+      movable_indices: [1, 2, 3],
+    },
+    difficulty: "medium",
+    hint: "The author is making a case that the real slowdown was never where we thought. Follow the logic from the part to the whole to the punchline.",
+  },
+  {
+    id: "tnt-spellcheck-01",
+    mechanic: "spellcheck",
+    source: {
+      title: "26 Rules to Be a Better Thinker in 2026",
+      author: "Ryan Holiday",
+      story_url: "https://ryanholiday.medium.com/26-rules-to-be-a-better-thinker-in-2026-6393399aad3d",
+      author_url: "https://medium.com/@ryanholiday",
+    },
+    content: {
+      passage_with_errors:
+        "Empathy is as much a practical skill as it is a moral one. If you don't have the ability to think about what other people think about this or that situation, to imagin how something looks from someone else's perspektive, then you have a very limited veiw of reality.",
+      errors: [
+        { wrong: "imagin", correct: "imagine" },
+        { wrong: "perspektive", correct: "perspective" },
+        { wrong: "veiw", correct: "view" },
+      ],
+      corrected_passage:
+        "Empathy is as much a practical skill as it is a moral one. If you don't have the ability to think about what other people think about this or that situation, to imagine how something looks from someone else's perspective, then you have a very limited view of reality.",
+    },
+    difficulty: "easy",
+    hint: "These errors are easy to glance past. Read slowly, one word at a time — the mistakes are in words you're most tempted to assume you know.",
+  },
+  {
+    id: "tnt-highlight-01",
+    mechanic: "highlight",
+    source: {
+      title: "The tipping point",
+      author: "Thomas Ricouard",
+      story_url: "https://dimillian.medium.com/the-tipping-point-d624283cbd6d",
+      author_url: "https://medium.com/@dimillian",
+    },
+    content: {
+      sentences: [
+        "I think the past couple of weeks have probably been the most intensive in terms of AI time contraction.",
+        "So much happens in so little time, and the collective opinion seems to have shifted.",
+        "From 'yeah, it works and can write some code for me', to 'wow, I can run multiple agents in parallel to run a bunch of things'.",
+        "It's a sort of collective awakening.",
+        "A year ago, if I told you that you'll mostly only review code those days, and not write a single line yourself, you would have looked at me weirdly.",
+        "Truth is, now it's better code than the average Software Engineer, and if you know what you're doing, you can produce an ungodly amount of good-looking code in a fraction of the time it would have taken you before.",
+      ],
+      correct_index: 3,
+      highlight_density: [0.08, 0.07, 0.11, 0.42, 0.18, 0.14],
+    },
+    difficulty: "easy",
+    hint: "The author is reaching for a phrase that names the whole moment. Which sentence is the caption for everything else?",
+  },
+  {
+    id: "tnt-highlight-02",
+    mechanic: "highlight",
+    source: {
+      title: "26 Rules to Be a Better Thinker in 2026",
+      author: "Ryan Holiday",
+      story_url: "https://ryanholiday.medium.com/26-rules-to-be-a-better-thinker-in-2026-6393399aad3d",
+      author_url: "https://medium.com/@ryanholiday",
+    },
+    content: {
+      sentences: [
+        "The physicist John Wheeler said that 'as our island of knowledge grows, so does the shore of our ignorance.'",
+        "Conceitedness is the primary impediment to wisdom.",
+        "That's something I often find with AI, its quickness and confidence in its answers — which are laughably wrong.",
+        "If you want to stay humble, focus on all that you still don't know.",
+        "After all, isn't that the Socratic method?",
+        "It's impossible to learn that which you think you already know.",
+      ],
+      correct_index: 0,
+      highlight_density: [0.38, 0.14, 0.16, 0.12, 0.08, 0.12],
+    },
+    difficulty: "medium",
+    hint: "The author is borrowing a metaphor to make a point about scale. Which sentence gives that point its most memorable shape?",
+  },
+];
+
+const newThreshold: Pack = {
+  title: "The New Threshold",
+  editor: "The Wordplay Team",
   date: daysAgo(6),
-  puzzles: smallTruthsPuzzles,
+  puzzles: newThresholdPuzzles,
   welcome: {
-    body: "Today's pack is about the things hiding in plain sight — the truths so quiet you almost miss them. Grandmothers who speak in silences. Notebooks that change how the world looks.",
-    body2: "These puzzles ask you to slow down and notice. The words matter. So does the space between them.",
+    body: "This pack is about the moment before everything shifts — when the tools change faster than the habits, when the old questions about expertise and thinking suddenly feel more urgent, not less. These puzzles draw from engineers asking what review even means now, and a philosopher asking what thinking ever meant at all.",
+    body2: "The words here don't settle. They ask you to hold two uncomfortable ideas at once: that something genuinely new is happening, and that the oldest human skills are the ones that will matter most.",
   },
-  editorNote: "I built this pack around the idea that wisdom doesn't announce itself. The writers here found something true by paying attention to what most people walk past. I hope the puzzles helped you see that too.",
-};
-
-// ─── Archive Pack 2: Against the Clock ────────────────────
-
-const againstTheClockPuzzles: Puzzle[] = [
-  {
-    id: "atc-fill-01",
-    mechanic: "fill",
-    source: {
-      title: "Running Out of Time at Thirty",
-      author: "Kenji Mori",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "At twenty, time felt ______. By thirty, I could hear it. Every ______ came with a quiet awareness that choosing this meant ______ that.",
-      answers: ["infinite", "decision", "losing"],
-      full_passage:
-        "At twenty, time felt infinite. By thirty, I could hear it. Every decision came with a quiet awareness that choosing this meant losing that.",
-    },
-    difficulty: "medium",
-    hint: "The passage tracks a shift from abundance to scarcity.",
-  },
-  {
-    id: "atc-fill-02",
-    mechanic: "fill",
-    source: {
-      title: "The Tyranny of the Calendar",
-      author: "Angela Torres",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "We don't ______ our calendars. They manage us. Every shared invite, every ______ block, every recurring meeting is a small ______ of autonomy we barely notice making.",
-      answers: ["manage", "focus", "surrender"],
-      full_passage:
-        "We don't manage our calendars. They manage us. Every shared invite, every focus block, every recurring meeting is a small surrender of autonomy we barely notice making.",
-    },
-    difficulty: "medium",
-    hint: "The author is reversing who's in control.",
-  },
-  {
-    id: "atc-rearrange-01",
-    mechanic: "rearrange",
-    source: {
-      title: "Running Out of Time at Thirty",
-      author: "Kenji Mori",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "I spent my twenties believing there would always be more time.",
-        "More chances to travel, to write, to call my parents back.",
-        "Then one morning I realized I was the age my father was when he had me.",
-        "The arithmetic was simple but it changed everything.",
-        "I wasn't running out of time. I was finally inside it.",
-        "That's a different kind of urgency — not panic, but presence.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "medium",
-    hint: "The setup is about youth, the middle is the turning point, the end is the lesson.",
-  },
-  {
-    id: "atc-spellcheck-01",
-    mechanic: "spellcheck",
-    source: {
-      title: "Running Out of Time at Thirty",
-      author: "Kenji Mori",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "The hardest part of getting older isn't the physical decline. Its the narrowing of possibility — the slow realization that your life has a boarder now, and everything you choose to do is also a choice about what you'll never do.",
-      errors: [
-        { wrong: "Its", correct: "It's" },
-        { wrong: "boarder", correct: "border" },
-      ],
-      corrected_passage:
-        "The hardest part of getting older isn't the physical decline. It's the narrowing of possibility — the slow realization that your life has a border now, and everything you choose to do is also a choice about what you'll never do.",
-    },
-    difficulty: "medium",
-    hint: "One error is about possession vs. contraction. The other is about edges, not tenants.",
-  },
-  {
-    id: "atc-highlight-01",
-    mechanic: "highlight",
-    source: {
-      title: "What I Learned From My Father's Urgency",
-      author: "Kenji Mori",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "My father retired on a Friday and started painting on a Monday.",
-        "Not because he'd always wanted to paint.",
-        "Because he'd always wanted to want something badly enough to begin.",
-        "He told me, 'I spent forty years being responsible. Now I'm going to be alive.'",
-        "He wasn't very good at painting.",
-        "He was magnificent at beginning.",
-      ],
-      correct_index: 3,
-      highlight_density: [0.07, 0.05, 0.16, 0.40, 0.06, 0.26],
-    },
-    difficulty: "medium",
-    hint: "The most highlighted line is often the one where someone speaks — where the mask comes off.",
-  },
-  {
-    id: "atc-highlight-02",
-    mechanic: "highlight",
-    source: {
-      title: "The Tyranny of the Calendar",
-      author: "Angela Torres",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "We treat busyness like a badge of honor.",
-        "But it's really a shield.",
-        "If every hour is accounted for, you never have to face the discomfort of choosing what actually matters.",
-        "The calendar becomes a conscience — or at least, a convincing substitute for one.",
-        "I deleted my recurring meetings on a Tuesday.",
-        "By Thursday I was terrified. By Sunday I was painting.",
-      ],
-      correct_index: 2,
-      highlight_density: [0.08, 0.12, 0.38, 0.22, 0.07, 0.13],
-    },
-    difficulty: "hard",
-    hint: "Readers highlight the sentence that names the real function of busyness — what it protects you from.",
-  },
-];
-
-const againstTheClock: Pack = {
-  title: "Against the Clock",
-  editor: "Raj Patel",
-  date: daysAgo(5),
-  puzzles: againstTheClockPuzzles,
-  welcome: {
-    body: "Time is the subject today — not the ticking-clock kind, but the slow realization that your life has borders. These writers found clarity in that awareness.",
-    body2: "Fill in the blanks, rearrange the arguments, and see if urgency can be something other than panic.",
-  },
-  editorNote: "I've been thinking about time differently since putting this pack together. Not as something running out, but as something you can finally feel. The writers here helped me see that. I hope they do the same for you.",
-};
-
-// ─── Archive Pack 3: The Long View ────────────────────────
-
-const longViewPuzzles: Puzzle[] = [
-  {
-    id: "lv-fill-01",
-    mechanic: "fill",
-    source: {
-      title: "Lessons from a Ten-Year Experiment",
-      author: "Harold West",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "The thing about long-term projects is that they ______ you. You start with a hypothesis and end with a ______. The person who finishes is never the person who ______.",
-      answers: ["outlast", "confession", "began"],
-      full_passage:
-        "The thing about long-term projects is that they outlast you. You start with a hypothesis and end with a confession. The person who finishes is never the person who began.",
-    },
-    difficulty: "hard",
-    hint: "The passage is about transformation through sustained effort.",
-  },
-  {
-    id: "lv-fill-02",
-    mechanic: "fill",
-    source: {
-      title: "The Slow Art of Getting Better",
-      author: "Diana Reyes",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "Improvement isn't a ______. It's a direction. You don't wake up one morning ______ than you were. You wake up slightly more ______ of what you couldn't see before.",
-      answers: ["destination", "better", "aware"],
-      full_passage:
-        "Improvement isn't a destination. It's a direction. You don't wake up one morning better than you were. You wake up slightly more aware of what you couldn't see before.",
-    },
-    difficulty: "medium",
-    hint: "The author redefines improvement as perception, not achievement.",
-  },
-  {
-    id: "lv-rearrange-01",
-    mechanic: "rearrange",
-    source: {
-      title: "Lessons from a Ten-Year Experiment",
-      author: "Harold West",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "In year one, I was full of confidence.",
-        "By year three, I was full of doubt.",
-        "By year five, the doubt had become something else entirely.",
-        "Not confidence again — something quieter.",
-        "A willingness to keep going without needing to know why.",
-        "That, I think, is what patience actually looks like.",
-      ],
-      movable_indices: [1, 3, 4],
-    },
-    difficulty: "medium",
-    hint: "Confidence dissolves into doubt, then into something beyond both.",
-  },
-  {
-    id: "lv-spellcheck-01",
-    mechanic: "spellcheck",
-    source: {
-      title: "The Slow Art of Getting Better",
-      author: "Diana Reyes",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "Practice doesn't make perfect — that phrase has always been misleading. Practice makes permanant. Whatever you repeat, whether it's good form or bad, becomes the default. The only question is weather you're practicing the right things.",
-      errors: [
-        { wrong: "permanant", correct: "permanent" },
-        { wrong: "weather", correct: "whether" },
-      ],
-      corrected_passage:
-        "Practice doesn't make perfect — that phrase has always been misleading. Practice makes permanent. Whatever you repeat, whether it's good form or bad, becomes the default. The only question is whether you're practicing the right things.",
-    },
-    difficulty: "medium",
-    hint: "One word describes climate. The other describes choice. And check your vowels.",
-  },
-  {
-    id: "lv-highlight-01",
-    mechanic: "highlight",
-    source: {
-      title: "The Slow Art of Getting Better",
-      author: "Diana Reyes",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "Nobody tells you that mastery is mostly boredom.",
-        "You do the same thing, in the same room, for years.",
-        "The improvements are invisible to everyone, including you.",
-        "And then one day, your hands know something your mind hasn't caught up to yet.",
-        "That's the moment. Not a breakthrough — a recognition.",
-        "You've been good for a while. You just didn't notice.",
-      ],
-      correct_index: 3,
-      highlight_density: [0.10, 0.06, 0.08, 0.44, 0.18, 0.14],
-    },
-    difficulty: "medium",
-    hint: "The most highlighted sentence often captures a felt experience — something the reader's body recognizes before their mind does.",
-  },
-  {
-    id: "lv-highlight-02",
-    mechanic: "highlight",
-    source: {
-      title: "Lessons from a Ten-Year Experiment",
-      author: "Harold West",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "I started the project at thirty-two, certain I knew what I was doing.",
-        "By thirty-five I'd thrown out the original plan entirely.",
-        "By forty, I'd stopped planning at all.",
-        "The thing about long-term projects is that they outlast you.",
-        "You start with a hypothesis and end with a confession.",
-        "The person who finishes is never the person who began.",
-      ],
-      correct_index: 5,
-      highlight_density: [0.04, 0.06, 0.08, 0.15, 0.22, 0.45],
-    },
-    difficulty: "medium",
-    hint: "The most highlighted sentence is the one that turns a story about a project into a story about identity.",
-  },
-];
-
-const longView: Pack = {
-  title: "The Long View",
-  editor: "Clara Hughes",
-  date: daysAgo(4),
-  puzzles: longViewPuzzles,
-  welcome: {
-    body: "Patience is underrated. Today's writers spent years — sometimes decades — learning something that couldn't be rushed. Their essays are proof that the slow way is sometimes the only way.",
-    body2: "Four puzzles, each drawn from writing about persistence. Take your time with them. That's sort of the point.",
-  },
-  editorNote: "This pack was the hardest to curate, because the best writing about patience is itself patient. These passages don't hurry. I hope you didn't either.",
-};
-
-// ─── Archive Pack 4: Quiet Machines ───────────────────────
-
-const quietMachinesPuzzles: Puzzle[] = [
-  {
-    id: "qm-fill-01",
-    mechanic: "fill",
-    source: {
-      title: "The Algorithm Knows You Better Than You Do",
-      author: "Sana Malik",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "The algorithm doesn't ______ you. It reflects you — the version of yourself that ______ at two in the morning, the one that searches for ______ in the form of content.",
-      answers: ["judge", "scrolls", "reassurance"],
-      full_passage:
-        "The algorithm doesn't judge you. It reflects you — the version of yourself that scrolls at two in the morning, the one that searches for reassurance in the form of content.",
-    },
-    difficulty: "medium",
-    hint: "The algorithm is a mirror, not a critic.",
-  },
-  {
-    id: "qm-fill-02",
-    mechanic: "fill",
-    source: {
-      title: "Why I Stopped Using My Phone Before Bed",
-      author: "James Cooper",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "The last thing I saw each night was a ______. Not a book, not a person — a screen. I'd ______ through other people's days until my own felt ______ enough to end.",
-      answers: ["glow", "scroll", "small"],
-      full_passage:
-        "The last thing I saw each night was a glow. Not a book, not a person — a screen. I'd scroll through other people's days until my own felt small enough to end.",
-    },
-    difficulty: "hard",
-    hint: "The passage moves from what you see, to what you do, to how it makes you feel.",
-  },
-  {
-    id: "qm-rearrange-01",
-    mechanic: "rearrange",
-    source: {
-      title: "The Algorithm Knows You Better Than You Do",
-      author: "Sana Malik",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "I deleted my social media accounts on a Tuesday.",
-        "By Thursday, I'd reinstalled two of them.",
-        "Not because I missed the people.",
-        "Because I missed being known.",
-        "The algorithm had built a version of me that felt more consistent than I did.",
-        "Leaving it behind felt less like freedom and more like forgetting.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "hard",
-    hint: "Deletion leads to return. The reason isn't connection — it's identity.",
-  },
-  {
-    id: "qm-spellcheck-01",
-    mechanic: "spellcheck",
-    source: {
-      title: "The Algorithm Knows You Better Than You Do",
-      author: "Sana Malik",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "The principle danger of personalized feeds isn't misinformation — it's confirmation. When every peice of content confirms what you already believe, disagreement starts to feel like a bug rather then a feature of public life.",
-      errors: [
-        { wrong: "principle", correct: "principal" },
-        { wrong: "peice", correct: "piece" },
-        { wrong: "then", correct: "than" },
-      ],
-      corrected_passage:
-        "The principal danger of personalized feeds isn't misinformation — it's confirmation. When every piece of content confirms what you already believe, disagreement starts to feel like a bug rather than a feature of public life.",
-    },
-    difficulty: "hard",
-    hint: "One is a homophone mix-up. One breaks the i-before-e rule. One confuses sequence with comparison.",
-  },
-  {
-    id: "qm-highlight-01",
-    mechanic: "highlight",
-    source: {
-      title: "The Algorithm Knows You Better Than You Do",
-      author: "Sana Malik",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "The algorithm doesn't care about your intentions.",
-        "It cares about your 2 AM scrolling, your hesitations, the posts you almost liked but didn't.",
-        "It reads the you that you don't perform.",
-        "And it reflects that person back with terrifying accuracy.",
-        "We say we want to be understood. We don't.",
-        "We want to be understood on our own terms. The algorithm has no terms. Just data.",
-      ],
-      correct_index: 2,
-      highlight_density: [0.06, 0.14, 0.38, 0.20, 0.12, 0.10],
-    },
-    difficulty: "hard",
-    hint: "Short sentences that reframe everything tend to get the most highlights. Look for the pivot.",
-  },
-  {
-    id: "qm-highlight-02",
-    mechanic: "highlight",
-    source: {
-      title: "Why I Stopped Using My Phone Before Bed",
-      author: "James Cooper",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "The last thing I saw each night was a glow.",
-        "Not a book, not a person — a screen.",
-        "I'd scroll through other people's days until my own felt small enough to end.",
-        "The phone wasn't keeping me awake.",
-        "It was keeping me from wanting to sleep.",
-        "That's a different kind of problem.",
-      ],
-      correct_index: 2,
-      highlight_density: [0.07, 0.09, 0.42, 0.10, 0.22, 0.10],
-    },
-    difficulty: "medium",
-    hint: "Readers stop at the line that makes the familiar feel newly strange. Look for the image that reframes everything.",
-  },
-];
-
-const quietMachines: Pack = {
-  title: "Quiet Machines",
-  editor: "Leo Park",
-  date: daysAgo(3),
-  puzzles: quietMachinesPuzzles,
-  welcome: {
-    body: "We built the machines. Now they're building us back. Today's pack explores our relationship with technology — the algorithms that know us, the screens that bookend our days, the boredom we've forgotten how to feel.",
-    body2: "Six puzzles about what we gave up and what we might get back.",
-  },
-  editorNote: "I put my phone down while editing this pack. Not as a stunt — the passages just made it feel strange to be scrolling. That's the sign of writing that works on you, not just in front of you.",
-};
-
-// ─── Archive Pack 5: Open Questions ───────────────────────
-
-const openQuestionsPuzzles: Puzzle[] = [
-  {
-    id: "oq-fill-01",
-    mechanic: "fill",
-    source: {
-      title: "The Questions That Don't Have Answers",
-      author: "Lena Ostroff",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "The best teachers I had didn't give answers. They gave ______. A well-placed question can ______ a room in a way that no lecture ever could. It ______ people to think rather than simply agree.",
-      answers: ["questions", "unsettle", "forces"],
-      full_passage:
-        "The best teachers I had didn't give answers. They gave questions. A well-placed question can unsettle a room in a way that no lecture ever could. It forces people to think rather than simply agree.",
-    },
-    difficulty: "medium",
-    hint: "The author values disruption over certainty.",
-  },
-  {
-    id: "oq-fill-02",
-    mechanic: "fill",
-    source: {
-      title: "Learning to Sit with Uncertainty",
-      author: "Michael Adeyemi",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "Certainty is ______. Not because it's wrong, but because it stops the ______. The moment you decide you know, you stop looking. And the world has a way of ______ people who stop looking.",
-      answers: ["expensive", "conversation", "punishing"],
-      full_passage:
-        "Certainty is expensive. Not because it's wrong, but because it stops the conversation. The moment you decide you know, you stop looking. And the world has a way of punishing people who stop looking.",
-    },
-    difficulty: "hard",
-    hint: "Knowledge has a cost — not in being wrong, but in closing doors.",
-  },
-  {
-    id: "oq-rearrange-01",
-    mechanic: "rearrange",
-    source: {
-      title: "The Questions That Don't Have Answers",
-      author: "Lena Ostroff",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "My daughter asked me why people die.",
-        "I started to give her the biological answer.",
-        "Then I stopped, because I realized she wasn't asking about biology.",
-        "She was asking whether it was fair.",
-        "I didn't have an answer for that.",
-        "But sitting with her in the not-knowing felt like enough.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "medium",
-    hint: "A question, then an attempted answer, then realizing the real question, then acceptance.",
-  },
-  {
-    id: "oq-spellcheck-01",
-    mechanic: "spellcheck",
-    source: {
-      title: "The Questions That Don't Have Answers",
-      author: "Lena Ostroff",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "Children ask better questions then adults because they haven't yet learned to be embarrassed by not knowing. Curiosity isn't a trait you loose with age — it's one you learn to supress, one awkward silence at a time.",
-      errors: [
-        { wrong: "then", correct: "than" },
-        { wrong: "loose", correct: "lose" },
-        { wrong: "supress", correct: "suppress" },
-      ],
-      corrected_passage:
-        "Children ask better questions than adults because they haven't yet learned to be embarrassed by not knowing. Curiosity isn't a trait you lose with age — it's one you learn to suppress, one awkward silence at a time.",
-    },
-    difficulty: "medium",
-    hint: "One is a comparison word. One means to release, not to misplace. One is missing a letter.",
-  },
-  {
-    id: "oq-highlight-01",
-    mechanic: "highlight",
-    source: {
-      title: "What My Daughter Taught Me About Doubt",
-      author: "Michael Adeyemi",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "My daughter asked me if the sky was sad when it rained.",
-        "I started to say no, then stopped.",
-        "What kind of person answers a child's question with a fact?",
-        "She wasn't asking about weather. She was asking if the world had feelings.",
-        "And honestly, I'm not sure it doesn't.",
-        "Some questions are better left open, like windows in a warm room.",
-      ],
-      correct_index: 5,
-      highlight_density: [0.06, 0.04, 0.15, 0.14, 0.19, 0.42],
-    },
-    difficulty: "medium",
-    hint: "The most highlighted line is often the one with a metaphor that ties everything together.",
-  },
-  {
-    id: "oq-highlight-02",
-    mechanic: "highlight",
-    source: {
-      title: "Learning to Sit with Uncertainty",
-      author: "Michael Adeyemi",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "I used to think ambiguity was a problem to solve.",
-        "Every gray area was just a decision I hadn't made yet.",
-        "Then I spent a year working on a project with no clear outcome.",
-        "No roadmap, no metrics, no way to know if it was working.",
-        "Somewhere around month six, I stopped needing to know.",
-        "The work itself became the answer.",
-      ],
-      correct_index: 4,
-      highlight_density: [0.07, 0.08, 0.11, 0.13, 0.38, 0.23],
-    },
-    difficulty: "hard",
-    hint: "Readers often highlight the sentence where the author's relationship with the problem actually changes — not the conclusion, but the turning point.",
-  },
-];
-
-const openQuestions: Pack = {
-  title: "Open Questions",
-  editor: "Nina Osei",
-  date: daysAgo(2),
-  puzzles: openQuestionsPuzzles,
-  welcome: {
-    body: "Some questions don't have answers — and that's not a failure, it's a feature. Today's writers sit with uncertainty, ask the questions their children ask, and find clarity in not-knowing.",
-    body2: "Six puzzles that reward curiosity over certainty. If you're not sure, that's the right feeling.",
-  },
-  editorNote: "I chose these passages because they made me uncomfortable in the best way. The writers here don't pretend to know more than they do. That honesty is rare, and worth playing with.",
-};
-
-// ─── Archive Pack 6: First Light ──────────────────────────
-
-const firstLightPuzzles: Puzzle[] = [
-  {
-    id: "fl-fill-01",
-    mechanic: "fill",
-    source: {
-      title: "Starting Over at Fifty",
-      author: "Ruth Kessler",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "Starting over doesn't mean going back. It means ______ forward with less ______. I'd spent decades accumulating — things, opinions, obligations. Letting go wasn't ______. It was architectural. I was clearing the floor plan.",
-      answers: ["moving", "weight", "emotional"],
-      full_passage:
-        "Starting over doesn't mean going back. It means moving forward with less weight. I'd spent decades accumulating — things, opinions, obligations. Letting go wasn't emotional. It was architectural. I was clearing the floor plan.",
-    },
-    difficulty: "hard",
-    hint: "The metaphor shifts from physical movement to building design.",
-  },
-  {
-    id: "fl-fill-02",
-    mechanic: "fill",
-    source: {
-      title: "The Morning Everything Changed",
-      author: "Dante Ruiz",
-      story_url: "#",
-    },
-    content: {
-      passage:
-        "The phone rang at 6 a.m. on a ______. Nobody calls with good news at that hour. By the time I hung up, every plan I'd made for the next five years had become ______. Not canceled — just suddenly, completely ______.",
-      answers: ["Tuesday", "irrelevant", "optional"],
-      full_passage:
-        "The phone rang at 6 a.m. on a Tuesday. Nobody calls with good news at that hour. By the time I hung up, every plan I'd made for the next five years had become irrelevant. Not canceled — just suddenly, completely optional.",
-    },
-    difficulty: "hard",
-    hint: "The day of the week is mundane. The plans don't disappear — they just stop mattering.",
-  },
-  {
-    id: "fl-rearrange-01",
-    mechanic: "rearrange",
-    source: {
-      title: "Starting Over at Fifty",
-      author: "Ruth Kessler",
-      story_url: "#",
-    },
-    content: {
-      lines: [
-        "Everyone told me I was brave for starting a new career at fifty.",
-        "I didn't feel brave. I felt terrified.",
-        "But terror and excitement, I was learning, feel almost identical.",
-        "The same racing heart, the same sleepless nights.",
-        "The only difference is the story you tell yourself about what comes next.",
-        "I chose the story where this was a beginning.",
-      ],
-      movable_indices: [1, 3, 5],
-    },
-    difficulty: "medium",
-    hint: "Bravery, then fear, then realizing they're the same, then choosing meaning.",
-  },
-  {
-    id: "fl-spellcheck-01",
-    mechanic: "spellcheck",
-    source: {
-      title: "Starting Over at Fifty",
-      author: "Ruth Kessler",
-      story_url: "#",
-    },
-    content: {
-      passage_with_errors:
-        "The hardest part of starting over wasn't learning new things. It was unlearning the old ones. Every instinct I'd developed over thirty years in the same feild was now a liability. My experiance wasn't guiding me — it was anchoring me to a world that no longer existed.",
-      errors: [
-        { wrong: "feild", correct: "field" },
-        { wrong: "experiance", correct: "experience" },
-      ],
-      corrected_passage:
-        "The hardest part of starting over wasn't learning new things. It was unlearning the old ones. Every instinct I'd developed over thirty years in the same field was now a liability. My experience wasn't guiding me — it was anchoring me to a world that no longer existed.",
-    },
-    difficulty: "easy",
-    hint: "Both are common misspellings. The vowel combinations are tricky.",
-  },
-  {
-    id: "fl-highlight-01",
-    mechanic: "highlight",
-    source: {
-      title: "The Morning Everything Changed",
-      author: "Dante Ruiz",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "I woke up early the day after my mother died and made coffee.",
-        "Same mug, same kitchen, same view of the backyard.",
-        "Everything was identical, and nothing was the same.",
-        "I stood there holding a cup of coffee like it was the only real thing left in the world.",
-        "And maybe it was. Maybe that's how grief works.",
-        "It doesn't take things away. It changes what the remaining things mean.",
-      ],
-      correct_index: 5,
-      highlight_density: [0.08, 0.05, 0.18, 0.14, 0.10, 0.45],
-    },
-    difficulty: "medium",
-    hint: "Readers tend to highlight the sentence that gives the passage its thesis — the one that makes sense of everything before it.",
-  },
-  {
-    id: "fl-highlight-02",
-    mechanic: "highlight",
-    source: {
-      title: "Starting Over at Fifty",
-      author: "Ruth Kessler",
-      story_url: "#",
-    },
-    content: {
-      sentences: [
-        "Everyone told me I was brave for starting a new career at fifty.",
-        "I didn't feel brave. I felt terrified.",
-        "But terror and excitement, I was learning, feel almost identical.",
-        "The same racing heart, the same sleepless nights.",
-        "The only difference is the story you tell yourself about what comes next.",
-        "I chose the story where this was a beginning.",
-      ],
-      correct_index: 4,
-      highlight_density: [0.05, 0.10, 0.19, 0.08, 0.42, 0.16],
-    },
-    difficulty: "medium",
-    hint: "Readers highlight the sentence that reframes fear as something other than failure — where the pivot happens in the mind.",
-  },
-];
-
-const firstLight: Pack = {
-  title: "First Light",
-  editor: "Sam Okafor",
-  date: daysAgo(1),
-  puzzles: firstLightPuzzles,
-  welcome: {
-    body: "Beginnings are terrifying. They're also the only way anything new happens. Today's writers started over — at fifty, after a phone call, in a kitchen full of morning light — and found something worth keeping.",
-    body2: "Six puzzles about what it feels like when everything changes and you have to choose what comes next.",
-  },
-  editorNote: "Every essay in this pack is about a moment when the old story ended and a new one had to begin. The writers didn't know how it would turn out. That's what makes their words worth sitting with.",
+  editorNote: "I built this pack around a strange inversion: the smarter the tools get, the more essential clear, patient, human thinking becomes. Every writer here felt it differently — some with excitement, some with unease. I hope you leave with your own version of the question.",
 };
 
 // ─── Exports ──────────────────────────────────────────────
 
-export const packArchive: Pack[] = [
-  smallTruths,
-  againstTheClock,
-  longView,
-  quietMachines,
-  openQuestions,
-  firstLight,
-];
+export const packArchive: Pack[] = [whatWeOwe, newThreshold];
